@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../public/intro.css" type="text/css">
+  <title>Golf</title>
+</head>
+<body>
+
+  <main>
+    <div class="modal-wrapper">
+      <div class="message-wrapper">
+        <img class="logo" src="public/suits_imgs/logo.png" alt="Simply Easy Learning"/>
+        <h1>Welcome to Golf!</h1>
+        <p>Enter the private gamekey you got from a friend or create a new game to play.</p>
+      </div>
+      
+      <div class="form-wrapper">
+        <form id="join-game-form" action="/find-game" method="POST">
+          <label for="gameKey" class="gameKey-label">Private Game Key:</label>
+          <input id="gameKey" name="gameKey" type="text">
+          <br class="linebreak">
+          <button id="gameKey-button" type="submit">GO</button>
+        </form>
+      </div>
+      
+      <div class="divider">OR</div>
+
+      <div class="form-wrapper">
+        <form action="/game" method="POST">
+          <button type="submit" class="new-game-button">START NEW GAME</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

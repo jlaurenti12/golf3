@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../public/card_deck.css" type="text/css">
+  <title>Deck of Cards</title>
+</head>
+<body>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"
+  integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
+  crossorigin="anonymous"></script>
+
+  <!-- THIS SPAN HOLDS DATA FROM EJS -->
+  <!-- IN JS ACCESS IT WITH document.querySeletor('#data').dataset -->
+<span id="data" data-gameKey="<%= gameNum %>"></span>
+
+
+  <main>
+  <!-- DEAL STARTER CONTROLS -->
+  <section id="controls-wrapper">
+    <button id="dealEl">Deal</button>
+
+    <button id="resetEl">Reset</button>
+
+      <!-- SCOREBOARD -->
+    <div id="scoreboard">
+      <div class="gameKey">Private Game Key: <span><%= gameNum %></span></div>
+      <section class="score1">
+        <label for="score1-counter">Player 1:</label>
+        <span id="player1Score"><span>
+      </section>
+      <section class="score2">
+        <label for="score2-counter">Player 2:</label>
+        <span id="player2Score"><span>
+      </section>
+      <section class="score1">
+        <label for="score1-counter">Player 3:</label>
+        <span id="player3Score"><span>
+      </section>
+      <section class="score2">
+        <label for="score2-counter">Player 4:</label>
+        <span id="player4Score"><span>
+      </section>
+    </div>
+  </section>
+    <!-- Player 1 wrapper -->
+    <section id="player1-wrapper">
+      
+      <!-- PLAYER 1 HAND -->
+      <div class="player-controls">
+        <h3>Player 1 hand</h3>
+      </div>
+
+      <!-- Hand wrapper -->
+      <div class="hand-wrapper">
+        <div class="player1-wrapper">
+          <div class="player1"></div>
+        </div>  
+      </div>
+    </section>
+
+    <!-- The pots, starter, and counter -->
+    <div class="play-container">
+          <div class="pot-left">
+            <section id="player4-wrapper">
+              
+              <!-- PLAYER 4 HAND -->
+              <div class="player-controls">
+              <h3>Player 4 hand</h3>
+              </div>
+
+              <!-- Hand wrapper -->
+              <div class="hand-wrapper">
+                
+                <div class="player4-wrapper">
+                  <div class="player4"></div>
+                </div>
+                
+              </div>
+            </section>
+          </div>      
+
+
+
+        <div class="starter">
+        </div>
+
+          <!-- Player 2 wrapper -->
+          <section id="player2-wrapper">
+          
+          <!-- PLAYER 2 HAND -->
+          <div class="player-controls">
+          <h3>Player 2 hand</h3>
+          </div>
+
+          <!-- Hand wrapper -->
+          <div class="hand-wrapper">
+            
+            <div class="player2-wrapper">
+              <div class="player2"></div>
+            </div>
+            
+          </div>
+
+        </section>
+          
+    </div>
+
+    
+    <!-- Player 3 wrapper -->
+    <section id="player3-wrapper">
+      <!-- PLAYER 3 HAND -->
+
+      <div class="player-controls">
+        <h3>Player 3 hand</h3>
+      </div>
+
+      <!-- Hand wrapper -->
+      <div class="hand-wrapper">
+        
+          <div class="player3-wrapper">
+            <div class="player3"></div>
+          </div>
+          
+      </div>
+
+    </section>
+  </main>
+  
+  <!-- JQUERY DEPENDENCCY -->
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  
+
+  <!-- APP JAVASCRIPT -->
+  <script src='../public/cardDeck.js'></script>
+</body>
+</html>

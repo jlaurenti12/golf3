@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../public/card_deck.css" type="text/css">
+  <title>Game Not Found!</title>
+</head>
+<body>
+
+  <main>
+
+    <div class="modal-wrapper">
+      <h1>No game found with that key</h1>
+      <p>Looks like there's not a game with that key in the system right now. Would you like to start a new game? Or join an existing game?</p>
+      <div class="form-wrapper">
+        <form id="join-game-form" action="/find-game" method="POST">
+          <label for="gameKey">Game Key: </label>
+          <input id="gameKey" name="gameKey" type="text">
+          <button id="gameKey-button" type="submit">GO</button>
+        </form>
+      </div>
+
+      <div class="form-wrapper">
+        <form action="/game" method="POST">
+          <button type="submit">START NEW GAME</button>
+        </form>
+      </div>
+    
+    </div>
+    
+  </main>
+</body>
+</html>

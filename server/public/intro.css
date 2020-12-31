@@ -1,0 +1,118 @@
+@import url("https://use.typekit.net/dqj3pnj.css");
+
+*{
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #344572;
+  color: #F1F2F4;
+  font-family: lato,sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+main {
+  width: 70%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+h3 {
+  text-align: center;
+  margin-top: 0;
+}
+
+/* INTRO
+====================== */
+.modal-wrapper {
+  width: 69%;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2A395E;
+  padding: 20px;
+  text-align: center;
+}
+
+.message-wrapper {
+  padding-bottom: 2em;
+}
+
+.divider {
+  box-sizing: border-box;
+  padding: 2em 0;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.divider::before, .divider::after {
+  content: "";
+  height: 0px;
+  width: 30%;
+  border-bottom: 1px solid;
+}
+
+.form-wrapper {
+  margin-bottom: 2rem;
+}
+
+.gameKey-label {
+  padding-right: .2em;
+}
+
+#gameKey-button {
+  width: 5rem;
+}
+
+
+/* CONTROLS
+================= */
+button {
+  background-color: #192954;
+  color: #fff;
+  padding: 10px 2em;
+  border: 1px solid #dbb20f;
+  border-radius: 30px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.linebreak {
+  display: none;
+}
+
+/* tablet styles */
+@media only screen and (max-width: 769px) {
+  main {
+    width: 100%;
+    padding: 0;
+    font-size: 22px;
+  }
+
+  .modal-wrapper {
+    width: 100%;
+    margin: 0;
+  }
+
+  .form-wrapper {
+    margin: 0;
+  }
+
+  #gameKey {
+    width: 7em;
+  }
+
+  .linebreak {
+    display: inline;
+  }
+
+  .new-game-button {
+    padding: 10px 2em;
+  }
+}
