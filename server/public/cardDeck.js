@@ -609,6 +609,8 @@ function getStarter(handEl, hand) {
       passVis = snap.val();
     })
 
+    console.log(passVis);
+    
     if (passVis) {
       handEl.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
     } else {
