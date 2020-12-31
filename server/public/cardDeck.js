@@ -514,6 +514,7 @@ player4ScoreRef.on('value', (snap)=>{
 
 starterRef.on('value', (snap)=>{
   let hand = snap.val();
+  console.log(hand);
   starterEl.innerHTML = '';
   getStarter(starterEl, hand);
 })
@@ -830,9 +831,10 @@ starterEl.addEventListener('click', (e)=>{
                 starterEl.innerHTML = '';
                 starter.hidden = false;
                 passRef.set(true);
+                console.log(starter);
                 getStarter(starterEl, starter);
                 starterRef.set({starter:[]});
-                starterRef.push().set(starter);
+                starterRef.push(starter);
             });
 
           } 
@@ -929,7 +931,7 @@ starterEl.addEventListener('click', (e)=>{
                 passRef.set(false);
                 getStarter(starterEl, starter);
                 starterRef.set({starter:[]});
-                starterRef.push().set(starter);
+                starterRef.push(starter);
 
               
               console.log('passed');
@@ -1084,7 +1086,7 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                     }
                     playerEl.innerHTML='';
                     getFBHand(playerEl, hand);
-                    playerHand.set(hand);
+                    playerHand.set();
                     checkAllVisible(hand, playerEl.classList[0], playerScore);
                   }
 
