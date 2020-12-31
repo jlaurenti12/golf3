@@ -615,6 +615,7 @@ function getStarter(handEl, hand) {
       handEl.innerHTML = `<div id="deck" class="hide card"></div>`;
     }
 
+    console.log(hand);
 
     for(key in hand){
       let suit = hand[key].suit;
@@ -823,8 +824,6 @@ starterEl.addEventListener('click', (e)=>{
                 let fbDeck = snap.val();
                 let starter = fbDeck[0];
 
-                console.log(starter);
-
                 fbDeck.shift();
                 deckRef.set(fbDeck);
 
@@ -833,8 +832,9 @@ starterEl.addEventListener('click', (e)=>{
                 passRef.set(true);
                 console.log(starter);
                 getStarter(starterEl, starter);
-                starterRef.set({starter:[]});
-                starterRef.push(starter);
+                // starterRef.set({starter:[]});
+                starterRef.set([starter]);
+
             });
 
           } 
@@ -924,14 +924,23 @@ starterEl.addEventListener('click', (e)=>{
                 // starterRef.set({hand:[]});
                 // starterRef.set(hand);
 
-                console.log(hand[0]);
-                let starter = hand[0];
+
+                // starterEl.innerHTML = '';
+                // starter.hidden = false;
+                // passRef.set(true);
+                // console.log(starter);
+                // getStarter(starterEl, starter);
+                // // starterRef.set({starter:[]});
+                // starterRef.set([starter]);
+
+                console.log(hand);
+                let starter = hand;
+
                 starterEl.innerHTML = '';
-                starter.hidden = false;
+                starter[0].hidden = false;
                 passRef.set(false);
                 getStarter(starterEl, starter);
-                starterRef.set({starter:[]});
-                starterRef.push(starter);
+                starterRef.set(starter);
 
               
               console.log('passed');
@@ -1068,11 +1077,9 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                   starter[0].selected = false;
                   
                   passRef.set(false);
-                  console.log(starterEl);
                   starterEl.innerHTML = '';
-                  console.log(starterEl);
                   getStarter(starterEl, starter);
-                  console.log(starterEl);
+                  console.log(starter);
                   starterRef.set(starter);
 
                   switchTurns(playerEl.classList[0]);
