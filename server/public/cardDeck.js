@@ -200,7 +200,8 @@ let player2CribEl = document.querySelector('.crib2');
 let $player1Crib = $('.crib1');
 let $player2Crib = $('.crib2');
 
-let starterEl = document.querySelector('.starter');
+let starterEl = document.querySelector('#showingCard');
+let remainingCard = document.querySelector('#remainingCards');
 let player1PotEl = document.querySelector('.player1-pot');
 let player2PotEl = document.querySelector('.player2-pot');
 
@@ -514,7 +515,7 @@ player4ScoreRef.on('value', (snap)=>{
 
 starterRef.on('value', (snap)=>{
   let hand = snap.val();
-  console.log(hand);
+  console.log("this is from the starterRef", hand);
   starterEl.innerHTML = '';
   getStarter(starterEl, hand);
 })
@@ -610,10 +611,13 @@ function getScore(player, score)  {
 
 
 function showHide(passVis) {
+
+  // console.log(remainingCard.innerHTML);
+
   if (passVis) {
-    starterEl.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
+    remainingCard.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
   } else {
-    starterEl.innerHTML = `<div id="deck" class="hide card"></div>`;
+    remainingCard.innerHTML = `<div id="deck" class="hide card"></div>`;
   }
 }
 
@@ -793,8 +797,45 @@ function findScore(hand, player, pScore) {
 
 
 
-
 starterEl.addEventListener('click', (e)=>{
+
+  let card = e.target.closest('div');
+
+  console.log('deck clicked');
+
+  if (checkForStart() >= 8){
+
+      let hand;
+
+      starterRef.once('value', (snap)=>{
+        hand = snap.val();
+      });
+
+      for (key in hand) {
+          let fbSelected = hand[key]['selected'];
+
+          if (fbSelected) {
+            hand[key]['selected'] = false;
+          } else {
+            hand[key]['selected'] = true;
+          }
+
+          starterEl.innerHTML='';
+
+          getStarter(starterEl, hand);
+                    
+          starterRef.set(hand);
+      }
+      
+
+  }
+
+ });
+
+
+
+
+remainingCard.addEventListener('click', (e)=>{
 
 
      if (checkForStart() >= 8){
@@ -920,11 +961,12 @@ starterEl.addEventListener('click', (e)=>{
                 console.log(hand);
                 let starter = hand;
 
-                starterEl.innerHTML = '';
-                starter[0].hidden = false;
+                // starterEl.innerHTML = '';
+                // starter[0].hidden = false;
                 passRef.set(false);
-                getStarter(starterEl, starter);
-                starterRef.set(starter);
+                // showHide(false);
+                // getStarter(starterEl, starter);
+                // starterRef.set(starter);
 
               
               console.log('passed');
@@ -1033,6 +1075,7 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
         let starterRank = starter[0].rank;
 
         if (starterSelected && turn === playerEl.classList[0]) {
+          console.log('starter test')
           var answer = confirm('Do you want to switch?');
           if (answer) {
             for (key in hand) {
