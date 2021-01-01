@@ -519,6 +519,13 @@ starterRef.on('value', (snap)=>{
   getStarter(starterEl, hand);
 })
 
+passRef.on('value', (snap)=>{
+  let passVis = snap.val();
+  console.log(passVis);
+  // starterEl.innerHTML = '';
+  // getStarter(starterEl, hand);
+})
+
 // crib1Ref.on('value', (snap)=>{
 //   let hand = snap.val();
 //   player1CribEl.innerHTML = '';
@@ -610,7 +617,7 @@ function getStarter(handEl, hand) {
     })
 
     console.log(passVis);
-    
+
     if (passVis) {
       handEl.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
     } else {
@@ -903,37 +910,7 @@ starterEl.addEventListener('click', (e)=>{
 
               });
 
-              });
-
-              // passRef.set(false);
-              // starterEl.innerHTML = '';
-              // getStarter(starterEl, hand);
-              // starterRef.set(hand);
-              //  console.log(starterEl);
-              //  console.log(hand);
-
-              // // passRef.set(false);
-              // starterEl.innerHTML = '';
-              // console.log(starterEl);
-              // getStarter(starterEl, starter);
-              // console.log('switched');
-              // starterRef.set(starter);
-
-              // passRef.set(false);
-
-                // starterEl.innerHTML = '';
-                // getStarter(starterEl, hand);
-                // starterRef.set({hand:[]});
-                // starterRef.set(hand);
-
-
-                // starterEl.innerHTML = '';
-                // starter.hidden = false;
-                // passRef.set(true);
-                // console.log(starter);
-                // getStarter(starterEl, starter);
-                // // starterRef.set({starter:[]});
-                // starterRef.set([starter]);
+            });
 
                 console.log(hand);
                 let starter = hand;
