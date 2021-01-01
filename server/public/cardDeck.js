@@ -521,6 +521,7 @@ starterRef.on('value', (snap)=>{
 
 passRef.on('value', (snap)=>{
   let passVis = snap.val();
+  showHide(passVis);
   console.log(passVis);
   // starterEl.innerHTML = '';
   // getStarter(starterEl, hand);
@@ -608,6 +609,14 @@ function getScore(player, score)  {
 }
 
 
+function showHide(passVis) {
+  if (passVis) {
+    starterEl.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
+  } else {
+    starterEl.innerHTML = `<div id="deck" class="hide card"></div>`;
+  }
+}
+
 function getStarter(handEl, hand) {
 
     let passVis;
@@ -618,11 +627,7 @@ function getStarter(handEl, hand) {
 
     console.log(passVis);
 
-    if (passVis) {
-      handEl.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
-    } else {
-      handEl.innerHTML = `<div id="deck" class="hide card"></div>`;
-    }
+    showHide(passVis)
 
     console.log(hand);
 
@@ -906,11 +911,11 @@ starterEl.addEventListener('click', (e)=>{
                   player4HandRef.set(p4);
                   checkAllVisible(p4, player4El.classList[0], player4ScoreRef);
                 });
-                }
-
-              });
+              }
 
             });
+
+          });
 
                 console.log(hand);
                 let starter = hand;
@@ -926,8 +931,7 @@ starterEl.addEventListener('click', (e)=>{
               
 
 
-          } 
-          else {
+          } else {
 
             for (key in hand) {
               let fbSelected = hand[key]['selected'];
