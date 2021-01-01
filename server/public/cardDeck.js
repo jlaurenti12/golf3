@@ -973,24 +973,6 @@ remainingCard.addEventListener('click', (e)=>{
               
 
 
-          } else {
-
-            for (key in hand) {
-              let fbSelected = hand[key]['selected'];
-
-              if (fbSelected) {
-                hand[key]['selected'] = false;
-              } else {
-                hand[key]['selected'] = true;
-              }
-
-            starterEl.innerHTML='';
-
-            getStarter(starterEl, hand);
-                      
-            starterRef.set(hand);
-            }
-
           }
         });
       });
@@ -1113,15 +1095,15 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                   lastTurnRef.once('value', (snap)=> {
                   let last = snap.val();
 
-                  if (last) {
-                    for (key in hand) {
-                      hand[key]['hidden'] = false;
+                    if (last) {
+                      for (key in hand) {
+                        hand[key]['hidden'] = false;
+                      }
+                      playerEl.innerHTML='';
+                      getFBHand(playerEl, hand);
+                      playerHand.set(hand);
+                      checkAllVisible(hand, playerEl.classList[0], playerScore);
                     }
-                    playerEl.innerHTML='';
-                    getFBHand(playerEl, hand);
-                    playerHand.set();
-                    checkAllVisible(hand, playerEl.classList[0], playerScore);
-                  }
 
                   });
 
