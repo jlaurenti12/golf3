@@ -9,6 +9,7 @@
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+
 //=======================================
 //Firebase setup
 //=======================================
@@ -29,59 +30,43 @@ let passRef = DeckReference.child('passVisible');
 let Player1Ref = DeckReference.child('player1');
 let player1HandRef = Player1Ref.child('player1Hand');
 let player1ScoreRef = Player1Ref.child('player1score');
-// let player1TurnRef = Player1Ref.child('player1turn');
+
 let Player2Ref = DeckReference.child('player2');
 let player2HandRef = Player2Ref.child('player2Hand');
 let player2ScoreRef = Player2Ref.child('player2score');
-// let player2TurnRef = Player2Ref.child('player2turn');
+
 let Player3Ref = DeckReference.child('player3');
 let player3HandRef = Player3Ref.child('player3Hand');
 let player3ScoreRef = Player3Ref.child('player3score');
-// let player3TurnRef = Player3Ref.child('player3turn');
+
 let Player4Ref = DeckReference.child('player4');
 let player4HandRef = Player4Ref.child('player4Hand');
 let player4ScoreRef = Player4Ref.child('player4score');
-// let player4TurnRef = Player4Ref.child('player4turn');
-// let count1Ref = DeckReference.child('count1');
-// let count2Ref = DeckReference.child('count2');
-// let crib1Ref = DeckReference.child('crib1');
-// let crib2Ref = DeckReference.child('crib2');
+
 let starterRef = DeckReference.child('starter');
 let discardedCardsRef = DeckReference.child('discardedCards');
 
-// let scoreboardRef = DeckReference.child('scoreboard');
-// let autoCribRef = DeckReference.child('autoCrib'); 
-// let counterRef = DeckReference.child('counter');
 // let coinFlipRef = DeckReference.child('coinFlip');
 let resetRef = DeckReference.child('reset');
 
 //set the player hands to empty on page load
 player1HandRef.set({player1Cards:[]});
-player1ScoreRef.set(0);
-// player1TurnRef.set(true);
+player1ScoreRef.set("--");
+
 player2HandRef.set({player2Cards:[]});
-player2ScoreRef.set(0);
-// player2TurnRef.set(false);
+player2ScoreRef.set("--");
+
 player3HandRef.set({player3Cards:[]});
-player3ScoreRef.set(0);
-// player3TurnRef.set(false);
+player3ScoreRef.set("--");
+
 player4HandRef.set({player4Cards:[]});
-player4ScoreRef.set(0);
-// player4TurnRef.set(false);
+player4ScoreRef.set("--");
+
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('player1');
 passRef.set(false);
 lastTurnRef.set(false);
 
-
-// count1Ref.set({count:[]});
-// count2Ref.set({count:[]});
-// crib1Ref.set({crib:[]});
-// crib2Ref.set({crib:[]});
-// starterRef.set({starter:[]})
-// scoreboardRef.set({score1: 0, score2: 0});
-// autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0});
-// counterRef.set(0);
 resetRef.set(false);
 // coinFlipRef.set({ player1: '', player2: '' });
 
@@ -137,14 +122,6 @@ class Deck {
     return this.deck;
   }
 
-  deal(cards) {
-    let hand = [];
-    while(hand.length < cards) {
-      hand.push(this.deck.pop());
-    }
-    deckRef.set(this.deck);
-    return hand;
-  }
 }
 
 
@@ -170,13 +147,6 @@ let ranks = [-1, -2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 0];
 let cardDeck = new Deck();
 cardDeck.createDeck(suits, values, ranks);
 cardDeck.shuffle();
-
-//make player hands
-// let player1Hand = [];
-let player2Hand = [];
-let turn = true;
-// let autoCrib1 = 0;
-// let autoCrib2 = 0;
 
 //get player hands html elements
 let player1El = document.querySelector('.player1');
@@ -217,31 +187,6 @@ let resetButton = document.querySelector('#resetEl');
 
 // get count element
 let countEl = document.querySelector('.count');
-
-// let $showButton1 = $('.show-hand-1');
-// let $showButton2 = $('.show-hand-2');
-// let $cribButton1 = $('.show-crib-1');
-// let $cribButton2 = $('.show-crib-2');
-
-// $showButton1.click(()=>{
-//   // $player1El.toggleClass('hide');
-//   $hand1Curtain.slideToggle();
-// });
-
-// $showButton2.click(()=>{
-//   // $player2El.toggleClass('hide');
-//   $hand2Curtain.slideToggle();
-// });
-
-// $cribButton1.click(()=>{
-//   // $player1Crib.toggleClass('hide');
-//   $('.crib1-curtain').slideToggle();
-// });
-
-// $cribButton2.click(()=>{
-//   // $player2Crib.toggleClass('hide')
-//   $('.crib2-curtain').slideToggle();
-// });
 
 // determine if player 1 or 2
 // coinFlipRef.once('value', (snap) => {
@@ -290,36 +235,6 @@ let countEl = document.querySelector('.count');
 //   document.querySelector('.modal').classList.add('hide-modal');
 // }
 
-// update firebase score reference when click scorboard element
-// player1ScoreEl.addEventListener('input', (e) => {
-
-//   scoreboardRef.once('value', (snap) => {
-//     let fbScore = snap.val();
-//     // console.log(fbScore);
-//     let score = player1ScoreEl.value;
-//     fbScore.score1 = score;
-//     scoreboardRef.set(fbScore);
-//     score = fbScore.score1;
-//   })
-// })
-
-// player2ScoreEl.addEventListener('input', (e) => {
-
-//   scoreboardRef.once('value', (snap) => {
-//     let fbScore = snap.val();
-//     // console.log(fbScore);
-//     let score = player2ScoreEl.value;
-//     fbScore.score2 = score;
-//     scoreboardRef.set(fbScore);
-//     score = fbScore.score2;
-//   })
-// })
-
-// scoreboardRef.on('value', (snap) => {
-//   player1ScoreEl.value = snap.val().score1;
-//   player2ScoreEl.value = snap.val().score2;
-// })
-
 //===================================
 // Reset all values except scoreboard
 // on reset button click
@@ -340,22 +255,13 @@ resetRef.on('value', (snap)=> {
   player2HandRef.set({player2Cards:[]});
   player3HandRef.set({player3Cards:[]});
   player4HandRef.set({player4Cards:[]});
-  // count1Ref.set({count:[]});
-  // count2Ref.set({count:[]});
-  // crib1Ref.set({crib:[]});
-  // crib2Ref.set({crib:[]});
-  player1ScoreRef.set(0);
-  player2ScoreRef.set(0);
-  player3ScoreRef.set(0);
-  player4ScoreRef.set(0);
 
-  // player1TurnRef.set(true);
-  // player2TurnRef.set(false);
-  // player3TurnRef.set(false);
-  // player4TurnRef.set(false);
+  player1ScoreRef.set("--");
+  player2ScoreRef.set("--");
+  player3ScoreRef.set("--");
+  player4ScoreRef.set("--");
 
-
-  turnRef.set('player1');
+  turnRef.set('');
   passRef.set(false);
   lastTurnRef.set(false);
 
@@ -363,23 +269,12 @@ resetRef.on('value', (snap)=> {
   starterRef.set([]);
   discardedCardsRef.set({discardedCards:[]});
   // counterRef.set(0);
-  // autoCribRef.set({fbAutoCrib1: 0, fbAutoCrib2: 0});
 
   // create a new deck and shuffle it
   cardDeck = new Deck();
   cardDeck.createDeck(suits, values, ranks);
   cardDeck.shuffle();
 
-  // reset the player hand arrays and the turn boolean
-  // player1Hand = [];
-  player2Hand = [];
-  turn = true;
-  // autoCrib1 = 0;
-  // autoCrib2 = 0;
-
-  //reset the pot elements on click (in case there's a glitch)
-  // player1PotEl.innerHTML = '';
-  // player2PotEl.innerHTML = '';
 });
 
 //============================================
@@ -437,6 +332,7 @@ function deal(){
 
     fbDeck.shift();
     deckRef.set(fbDeck);
+    turnRef.set('player1');
   });
 };
 
@@ -446,7 +342,6 @@ player1HandRef.on('value', (snap)=>{
   let hand = snap.val();
   //reset the players hand element
   player1El.innerHTML='';
-  // console.log('render Player 1 hand');
   getFBHand(player1El, hand);
 });
 
@@ -455,7 +350,6 @@ player1ScoreRef.on('value', (snap)=>{
   let score = snap.val();
   //reset the players hand element
   player1ScoreEl.innerHTML='';
-  // console.log('render Player 1 hand');
   getScore(player1ScoreEl, score);
 });
 
@@ -465,7 +359,6 @@ player2HandRef.on('value', (snap)=>{
   let hand = snap.val();
   //reset player hand element
   player2El.innerHTML='';
-  // console.log('render Player 2 hand');
   getFBHand(player2El, hand);
 })
 
@@ -474,7 +367,6 @@ player2ScoreRef.on('value', (snap)=>{
   let score = snap.val();
   //reset the players hand element
   player2ScoreEl.innerHTML='';
-  // console.log('render Player 1 hand');
   getScore(player2ScoreEl, score);
 });
 
@@ -483,7 +375,6 @@ player3HandRef.on('value', (snap)=>{
   let hand = snap.val();
   //reset player hand element
   player3El.innerHTML='';
-  // console.log('render Player 2 hand');
   getFBHand(player3El, hand);
 })
 
@@ -491,7 +382,6 @@ player3ScoreRef.on('value', (snap)=>{
   let score = snap.val();
   //reset the players hand element
   player3ScoreEl.innerHTML='';
-  // console.log('render Player 1 hand');
   getScore(player3ScoreEl, score);
 });
 
@@ -500,7 +390,6 @@ player4HandRef.on('value', (snap)=>{
   let hand = snap.val();
   //reset player hand element
   player4El.innerHTML='';
-  // console.log('render Player 2 hand');
   getFBHand(player4El, hand);
 })
 
@@ -508,14 +397,12 @@ player4ScoreRef.on('value', (snap)=>{
   let score = snap.val();
   //reset the players hand element
   player4ScoreEl.innerHTML='';
-  // console.log('render Player 1 hand');
   getScore(player4ScoreEl, score);
 });
 
 
 starterRef.on('value', (snap)=>{
   let hand = snap.val();
-  console.log("this is from the starterRef", hand);
   starterEl.innerHTML = '';
   getStarter(starterEl, hand);
 })
@@ -523,22 +410,13 @@ starterRef.on('value', (snap)=>{
 passRef.on('value', (snap)=>{
   let passVis = snap.val();
   showHide(passVis);
-  console.log(passVis);
-  // starterEl.innerHTML = '';
-  // getStarter(starterEl, hand);
 })
 
-// crib1Ref.on('value', (snap)=>{
-//   let hand = snap.val();
-//   player1CribEl.innerHTML = '';
-//   getFBHand(player1CribEl, hand);
-// })
+turnRef.on('value', (snap)=>{
+  let player = snap.val();
+  checkTurn(player);
+})
 
-// crib2Ref.on('value', (snap)=>{
-//   let hand = snap.val();
-//   player2CribEl.innerHTML = '';
-//   getFBHand(player2CribEl, hand);
-// })
 
 // count1Ref.on('value', (snap)=>{
 //   let hand = snap.val();
@@ -584,7 +462,6 @@ passRef.on('value', (snap)=>{
 //for each key in hand, create HTML element and append to hand element
 function getFBHand(handEl, hand){
   for(key in hand){
-    // console.log(key);
     let suit = hand[key].suit;
     let value = hand[key].value;
     let hidden = hand[key].hidden;
@@ -604,15 +481,44 @@ function getFBHand(handEl, hand){
   }
 }
 
+function checkTurn(player) {
+  if (player === Player1Ref.key) {
+    player1El.classList.add('selected');
+    player2El.classList.remove('selected');
+    player3El.classList.remove('selected');
+    player4El.classList.remove('selected');
+  }
+
+  if (player === Player2Ref.key) {
+    player2El.classList.add('selected');
+    player1El.classList.remove('selected');
+    player3El.classList.remove('selected');
+    player4El.classList.remove('selected');
+  }
+
+  if (player === Player3Ref.key) {
+    player3El.classList.add('selected');
+    player4El.classList.remove('selected');
+    player1El.classList.remove('selected');
+    player2El.classList.remove('selected');
+  }
+
+  if (player === Player4Ref.key) {
+    player4El.classList.add('selected');
+    player1El.classList.remove('selected');
+    player2El.classList.remove('selected');
+    player3El.classList.remove('selected');
+  }
+}
+
 
 function getScore(player, score)  {
+
     player.innerHTML = score;
 }
 
 
 function showHide(passVis) {
-
-  // console.log(remainingCard.innerHTML);
 
   if (passVis) {
     remainingCard.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
@@ -629,11 +535,7 @@ function getStarter(handEl, hand) {
       passVis = snap.val();
     })
 
-    console.log(passVis);
-
-    showHide(passVis)
-
-    console.log(hand);
+    showHide(passVis);
 
     for(key in hand){
       let suit = hand[key].suit;
@@ -801,8 +703,6 @@ starterEl.addEventListener('click', (e)=>{
 
   let card = e.target.closest('div');
 
-  console.log('deck clicked');
-
   if (checkForStart() >= 8){
 
       let hand;
@@ -847,11 +747,6 @@ remainingCard.addEventListener('click', (e)=>{
         let deck = snap.val();
         count = deck.length;
 
-      // discardedCardsRef.once('value', (snap)=>{
-      //   let discards = snap.val();
-      // });
-
-
       starterRef.once('value', (snap)=>{
       let hand = snap.val();
 
@@ -885,7 +780,6 @@ remainingCard.addEventListener('click', (e)=>{
                 starterEl.innerHTML = '';
                 starter.hidden = false;
                 passRef.set(true);
-                console.log(starter);
                 getStarter(starterEl, starter);
                 // starterRef.set({starter:[]});
                 starterRef.set([starter]);
@@ -957,19 +851,8 @@ remainingCard.addEventListener('click', (e)=>{
             });
 
           });
-
-                console.log(hand);
                 let starter = hand;
-
-                // starterEl.innerHTML = '';
-                // starter[0].hidden = false;
                 passRef.set(false);
-                // showHide(false);
-                // getStarter(starterEl, starter);
-                // starterRef.set(starter);
-
-              
-              console.log('passed');
               
 
 
@@ -1057,7 +940,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
         let starterRank = starter[0].rank;
 
         if (starterSelected && turn === playerEl.classList[0]) {
-          console.log('starter test')
           var answer = confirm('Do you want to switch?');
           if (answer) {
             for (key in hand) {
@@ -1087,7 +969,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                   passRef.set(false);
                   starterEl.innerHTML = '';
                   getStarter(starterEl, starter);
-                  console.log(starter);
                   starterRef.set(starter);
 
                   switchTurns(playerEl.classList[0]);
@@ -1106,8 +987,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                     }
 
                   });
-
-                  console.log(playerScore);
 
                   checkAllVisible(hand, playerEl.classList[0], playerScore);
 
