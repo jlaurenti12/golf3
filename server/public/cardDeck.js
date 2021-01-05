@@ -63,7 +63,7 @@ player4HandRef.set({player4Cards:[]});
 player4ScoreRef.set("--");
 
 discardedCardsRef.set({discardedCards:[]});
-turnRef.set('player1');
+turnRef.set('');
 passRef.set(false);
 lastTurnRef.set(false);
 
@@ -299,31 +299,57 @@ function snapshotToArray(snapshot) {
 function deal(){
   deckRef.once('value', (snap)=>{
     let fbDeck = snap.val();
-    let p1hand = fbDeck.slice(0, 6);
-    let p2hand = fbDeck.slice(6, 12);
-    let p3hand = fbDeck.slice(12, 18);
-    let p4hand = fbDeck.slice(18, 24);
 
-    fbDeck = fbDeck.slice(24, 52);
+    //added code
+    let turn = 0;
 
-    for (let i = 0; i < p1hand.length; i++) {
-        player1HandRef.push().set(p1hand[i]);
+    for (i = 0; i < 24; i++) {
+
+      let fbCard = fbDeck.shift();
+
+      if (turn === 0) {
+        player1HandRef.push(fbCard);
+        turn++
+      } else if (turn === 1) {
+        player2HandRef.push(fbCard);
+        turn++
+      } else if (turn === 2) {
+        player3HandRef.push(fbCard);
+        turn++
+      } else {
+        player4HandRef.push(fbCard);
+        turn = 0
       }
+    }
 
-    for (let i = 0; i < p2hand.length; i++) {
-        player2HandRef.push().set(p2hand[i]);
-      }
+    // can delete if above works
 
-    for (let i = 0; i < p3hand.length; i++) {
-        player3HandRef.push().set(p3hand[i]);
-      }
+    // let p1hand = fbDeck.slice(0, 6);
+    // let p2hand = fbDeck.slice(6, 12);
+    // let p3hand = fbDeck.slice(12, 18);
+    // let p4hand = fbDeck.slice(18, 24);
 
-    for (let i = 0; i < p4hand.length; i++) {
-        player4HandRef.push().set(p4hand[i]);
-      }
+    // fbDeck = fbDeck.slice(24, 52);
+
+    // for (let i = 0; i < p1hand.length; i++) {
+    //     player1HandRef.push().set(p1hand[i]);
+    //   }
+
+    // for (let i = 0; i < p2hand.length; i++) {
+    //     player2HandRef.push().set(p2hand[i]);
+    //   }
+
+    // for (let i = 0; i < p3hand.length; i++) {
+    //     player3HandRef.push().set(p3hand[i]);
+    //   }
+
+    // for (let i = 0; i < p4hand.length; i++) {
+    //     player4HandRef.push().set(p4hand[i]);
+    //   }
 
       let starter = fbDeck[0];
-      starter.hidden = false;
+      starter.hidden = true;
+      console.log(starter);
       starterRef.push(starter);
       starterRef.on('value', function(snapshot) {
           let hand = snapshotToArray(snapshot);
@@ -332,7 +358,6 @@ function deal(){
 
     fbDeck.shift();
     deckRef.set(fbDeck);
-    turnRef.set('player1');
   });
 };
 
@@ -487,27 +512,26 @@ function checkTurn(player) {
     player2El.classList.remove('selected');
     player3El.classList.remove('selected');
     player4El.classList.remove('selected');
-  }
-
-  if (player === Player2Ref.key) {
+  } else if (player === Player2Ref.key) {
     player2El.classList.add('selected');
     player1El.classList.remove('selected');
     player3El.classList.remove('selected');
     player4El.classList.remove('selected');
-  }
-
-  if (player === Player3Ref.key) {
+  } else if (player === Player3Ref.key) {
     player3El.classList.add('selected');
     player4El.classList.remove('selected');
     player1El.classList.remove('selected');
     player2El.classList.remove('selected');
-  }
-
-  if (player === Player4Ref.key) {
+  } else if (player === Player4Ref.key) {
     player4El.classList.add('selected');
     player1El.classList.remove('selected');
     player2El.classList.remove('selected');
     player3El.classList.remove('selected');
+  } else {
+    player1El.classList.remove('selected');
+    player2El.classList.remove('selected');
+    player3El.classList.remove('selected');
+    player4El.classList.remove('selected');
   }
 }
 
@@ -540,6 +564,7 @@ function getStarter(handEl, hand) {
     for(key in hand){
       let suit = hand[key].suit;
       let value = hand[key].value;
+      let hidden = hand[key].hidden;
       let cardEl = document.createElement('div');
       let selected = hand[key].selected;
       if (selected) {
@@ -548,7 +573,9 @@ function getStarter(handEl, hand) {
         cardEl.classList.remove('selected');
       }
 
-      if (suit === "Joker") {
+      if (hidden) {
+        cardEl.classList.add('hide'); 
+      } else if (suit === "Joker") {
           cardEl.innerHTML ='';
       } else {
           cardEl.innerHTML =
@@ -923,12 +950,24 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
   //get a snapshot of the player's hand search it for the
   //corresponding card that was clicked
   //check if the rest of the players cards are hidden
+
+
+
+
+
   playerHand.once('value', (snap)=>{
     let hand = snap.val();
     let count = 0;
 
     starterRef.once('value', (snap)=> {
       let starter = snap.val();
+
+        if (checkForStart() === 7 ){
+          starter[0].hidden = false;
+          getStarter(starterEl, starter);
+          starterRef.set(starter);
+          turnRef.set('player1');
+        }
       
         turnRef.once('value', (snap)=> {
         let turn = snap.val();
