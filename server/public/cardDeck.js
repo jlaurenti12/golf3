@@ -43,31 +43,35 @@ let Player4Ref = DeckReference.child('player4');
 let player4HandRef = Player4Ref.child('player4Hand');
 let player4ScoreRef = Player4Ref.child('player4score');
 
+let instructionRef = DeckReference.child('instructions');
 let starterRef = DeckReference.child('starter');
 let discardedCardsRef = DeckReference.child('discardedCards');
 
+let dealRef = DeckReference.child('deal');
 // let coinFlipRef = DeckReference.child('coinFlip');
 let resetRef = DeckReference.child('reset');
 
 //set the player hands to empty on page load
 player1HandRef.set({player1Cards:[]});
-player1ScoreRef.set("--");
+player1ScoreRef.set(0);
 
 player2HandRef.set({player2Cards:[]});
-player2ScoreRef.set("--");
+player2ScoreRef.set(0);
 
 player3HandRef.set({player3Cards:[]});
-player3ScoreRef.set("--");
+player3ScoreRef.set(0);
 
 player4HandRef.set({player4Cards:[]});
-player4ScoreRef.set("--");
+player4ScoreRef.set(0);
 
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('');
 passRef.set(false);
 lastTurnRef.set(false);
+instructionRef.set('pre-deal');
 
 resetRef.set(false);
+dealRef.set(false);
 // coinFlipRef.set({ player1: '', player2: '' });
 
 // remove the game's firebase node when the players leave the page
@@ -172,6 +176,7 @@ let $player2Crib = $('.crib2');
 
 let starterEl = document.querySelector('#showingCard');
 let remainingCard = document.querySelector('#remainingCards');
+let instructions = document.querySelector('.instructions');
 let player1PotEl = document.querySelector('.player1-pot');
 let player2PotEl = document.querySelector('.player2-pot');
 
@@ -239,6 +244,8 @@ let countEl = document.querySelector('.count');
 // Reset all values except scoreboard
 // on reset button click
 //===================================
+
+
 resetButton.addEventListener('click', (e) => {
   e.preventDefault();
 
@@ -249,6 +256,8 @@ resetButton.addEventListener('click', (e) => {
   })
 })
 
+
+
 resetRef.on('value', (snap)=> {
   //set the player hands to empty on page load
   player1HandRef.set({player1Cards:[]});
@@ -256,13 +265,14 @@ resetRef.on('value', (snap)=> {
   player3HandRef.set({player3Cards:[]});
   player4HandRef.set({player4Cards:[]});
 
-  player1ScoreRef.set("--");
-  player2ScoreRef.set("--");
-  player3ScoreRef.set("--");
-  player4ScoreRef.set("--");
+  // player1ScoreRef.set("--");
+  // player2ScoreRef.set("--");
+  // player3ScoreRef.set("--");
+  // player4ScoreRef.set("--");
 
   turnRef.set('');
   passRef.set(false);
+  instructionRef.set('pre-deal');
   lastTurnRef.set(false);
 
 
@@ -274,6 +284,9 @@ resetRef.on('value', (snap)=> {
   cardDeck = new Deck();
   cardDeck.createDeck(suits, values, ranks);
   cardDeck.shuffle();
+
+
+  dealRef.set(false);
 
 });
 
@@ -297,68 +310,65 @@ function snapshotToArray(snapshot) {
 };
 
 function deal(){
-  deckRef.once('value', (snap)=>{
-    let fbDeck = snap.val();
 
-    //added code
-    let turn = 0;
+  instructionRef.set('post-deal');
 
-    for (i = 0; i < 24; i++) {
+  instructionRef.on('value', (snap)=>{
+    state = snap.val();
+    getInstructions(state);
+  })
 
-      let fbCard = fbDeck.shift();
+  dealRef.once('value', (snap)=>{
+    deal = snap.val();
+  
+    if (deal) {}
+    else {
+      dealRef.set(true);
+      getDeal(true);
 
-      if (turn === 0) {
-        player1HandRef.push(fbCard);
-        turn++
-      } else if (turn === 1) {
-        player2HandRef.push(fbCard);
-        turn++
-      } else if (turn === 2) {
-        player3HandRef.push(fbCard);
-        turn++
-      } else {
-        player4HandRef.push(fbCard);
-        turn = 0
-      }
-    }
 
-    // can delete if above works
+      deckRef.once('value', (snap)=>{
+        let fbDeck = snap.val();
 
-    // let p1hand = fbDeck.slice(0, 6);
-    // let p2hand = fbDeck.slice(6, 12);
-    // let p3hand = fbDeck.slice(12, 18);
-    // let p4hand = fbDeck.slice(18, 24);
+        //added code
+        let turn = 0;
 
-    // fbDeck = fbDeck.slice(24, 52);
+        for (i = 0; i < 24; i++) {
 
-    // for (let i = 0; i < p1hand.length; i++) {
-    //     player1HandRef.push().set(p1hand[i]);
-    //   }
+          let fbCard = fbDeck.shift();
 
-    // for (let i = 0; i < p2hand.length; i++) {
-    //     player2HandRef.push().set(p2hand[i]);
-    //   }
+          if (turn === 0) {
+            player1HandRef.push(fbCard);
+            turn++
+          } else if (turn === 1) {
+            player2HandRef.push(fbCard);
+            turn++
+          } else if (turn === 2) {
+            player3HandRef.push(fbCard);
+            turn++
+          } else {
+            player4HandRef.push(fbCard);
+            turn = 0
+          }
+        }
 
-    // for (let i = 0; i < p3hand.length; i++) {
-    //     player3HandRef.push().set(p3hand[i]);
-    //   }
+          let starter = fbDeck[0];
+          starter.hidden = true;
+          console.log(starter);
+          starterRef.push(starter);
+          starterRef.on('value', function(snapshot) {
+              let hand = snapshotToArray(snapshot);
+              starterRef.set(hand);
+          });
 
-    // for (let i = 0; i < p4hand.length; i++) {
-    //     player4HandRef.push().set(p4hand[i]);
-    //   }
-
-      let starter = fbDeck[0];
-      starter.hidden = true;
-      console.log(starter);
-      starterRef.push(starter);
-      starterRef.on('value', function(snapshot) {
-          let hand = snapshotToArray(snapshot);
-          starterRef.set(hand);
+        fbDeck.shift();
+        deckRef.set(fbDeck);
       });
 
-    fbDeck.shift();
-    deckRef.set(fbDeck);
-  });
+      }
+
+    });
+
 };
 
 //listen for change in value of player 1 hand
@@ -425,6 +435,11 @@ player4ScoreRef.on('value', (snap)=>{
   getScore(player4ScoreEl, score);
 });
 
+instructionRef.on('value', (snap)=>{
+  let state = snap.val();
+  instructions.innerHTML = '';
+  getInstructions(state);
+})
 
 starterRef.on('value', (snap)=>{
   let hand = snap.val();
@@ -442,7 +457,10 @@ turnRef.on('value', (snap)=>{
   checkTurn(player);
 })
 
-
+dealRef.on('value', (snap)=>{
+  let deal = snap.val();
+  getDeal(deal);
+})
 // count1Ref.on('value', (snap)=>{
 //   let hand = snap.val();
 //   // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
@@ -542,12 +560,36 @@ function getScore(player, score)  {
 }
 
 
+function getDeal(deal) {
+  if (deal) {
+    dealButton.classList.add("buttonInactive");
+    resetButton.classList.remove("buttonInactive");
+
+  } else {
+    dealButton.classList.remove("buttonInactive");
+    resetButton.classList.add("buttonInactive");
+  }
+}
+
+
 function showHide(passVis) {
 
   if (passVis) {
     remainingCard.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
   } else {
     remainingCard.innerHTML = `<div id="deck" class="hide card"></div>`;
+  }
+}
+
+function getInstructions(state) {
+  if (state === 'pre-deal') {
+    instructions.style.visibility = 'visible';
+    instructions.innerHTML = `<span>Click Deal to start!</span>`;
+  } else if (state === 'post-deal') {
+    instructions.style.visibility = 'visible';
+    instructions.innerHTML = `<span>Everyone flip 2 cards!</span>`;
+  } else {
+    instructions.style.visibility = 'hidden';
   }
 }
 
@@ -574,7 +616,7 @@ function getStarter(handEl, hand) {
       }
 
       if (hidden) {
-        cardEl.classList.add('hide'); 
+        cardEl.style.visibility = "hidden";
       } else if (suit === "Joker") {
           cardEl.innerHTML ='';
       } else {
@@ -717,10 +759,19 @@ function findScore(hand, player, pScore) {
      column3 = columns(column3, values[2], values[5], ranks[2], ranks[5]);
 
      score = column1 + column2 + column3;
-                    
-     pScore.set(score);
 
-     getScore(player, score);
+     var currentScore;
+
+    pScore.once('value', (snap)=> {
+      currentScore = snap.val();
+      console.log(currentScore);
+    });
+
+    var newScore = currentScore + score;
+                    
+     pScore.set(newScore);
+
+     getScore(player, newScore);
 
 }
 
@@ -967,6 +1018,12 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
           getStarter(starterEl, starter);
           starterRef.set(starter);
           turnRef.set('player1');
+          instructionRef.set('post-flip');
+
+          instructionRef.on('value', (snap)=>{
+            state = snap.val();
+            getInstructions(state);
+          })
         }
       
         turnRef.once('value', (snap)=> {
