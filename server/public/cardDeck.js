@@ -760,6 +760,8 @@ function findScore(hand, player, pScore) {
 
      score = column1 + column2 + column3;
 
+     console.log(score);
+
      var currentScore;
 
     pScore.once('value', (snap)=> {
@@ -769,9 +771,9 @@ function findScore(hand, player, pScore) {
 
     var newScore = currentScore + score;
                     
-     pScore.set(newScore);
+    pScore.set(newScore);
 
-     getScore(player, newScore);
+    getScore(player, newScore);
 
 }
 
@@ -1080,11 +1082,11 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                       getFBHand(playerEl, hand);
                       playerHand.set(hand);
                       checkAllVisible(hand, playerEl.classList[0], playerScore);
+                    } else {
+                      checkAllVisible(hand, playerEl.classList[0], playerScore);
                     }
 
                   });
-
-                  checkAllVisible(hand, playerEl.classList[0], playerScore);
 
               }
 
