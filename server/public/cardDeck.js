@@ -53,16 +53,16 @@ let resetRef = DeckReference.child('reset');
 
 //set the player hands to empty on page load
 player1HandRef.set({player1Cards:[]});
-player1ScoreRef.set(0);
+player1ScoreRef.set([]);
 
 player2HandRef.set({player2Cards:[]});
-player2ScoreRef.set(0);
+player2ScoreRef.set([]);
 
 player3HandRef.set({player3Cards:[]});
-player3ScoreRef.set(0);
+player3ScoreRef.set([]);
 
 player4HandRef.set({player4Cards:[]});
-player4ScoreRef.set(0);
+player4ScoreRef.set([]);
 
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('');
@@ -189,6 +189,9 @@ let player4ScoreEl = document.querySelector('#player4Score');
 //get button elements
 let dealButton = document.querySelector('#dealEl');
 let resetButton = document.querySelector('#resetEl');
+let scoresButton = document.querySelector('#scoresEl');
+
+
 
 // get count element
 let countEl = document.querySelector('.count');
@@ -236,9 +239,91 @@ let countEl = document.querySelector('.count');
 //   document.querySelector('#controls-wrapper').appendChild(modal);
 // }
 
-// function closeModal() {
-//   document.querySelector('.modal').classList.add('hide-modal');
-// }
+scoresButton.addEventListener('click', showModal);
+
+
+function showModal() {
+  let modal = document.createElement('div');
+  modal.classList.add('modal');
+
+  let p1 = [];
+  let p2 = [];
+  let p3 = [];
+  let p4 = [];
+
+
+  let roundScores = [];
+
+  // get scores array for each player
+
+  player1ScoreRef.on('value', (snap)=>{
+    let scores = snap.val();
+    for (score in scores) {
+      p1.push(scores[score]);
+    }
+  });
+  
+  player2ScoreRef.on('value', (snap)=>{
+    let scores = snap.val();
+    for (score in scores) {
+      p2.push(scores[score]);
+    }
+  });
+
+  player3ScoreRef.on('value', (snap)=>{
+    let scores = snap.val();
+    for (score in scores) {
+      p3.push(scores[score]);
+    }
+  });
+
+  player4ScoreRef.on('value', (snap)=>{
+    let scores = snap.val();
+    for (score in scores) {
+      p4.push(scores[score]);
+    }
+  });
+
+
+  for (i = 0; i < p1.length; i++) {
+    let arr = [];
+    arr.push(p1[i], p2[i], p3[i], p4[i]);
+    roundScores.push(arr);
+    arr = [];
+  }
+
+
+  modal.innerHTML = `
+  <div class="modal-content">
+    <h3>Scores By Round</h3>
+    <span class="modal-close" onclick="closeModal()">x</span>
+    <table id="scores">
+      <tr>
+        <th>Player 1</th>
+        <th>Player 2</th>
+        <th>Player 3</th>
+        <th>Player 4</th>
+      </tr>
+    </table>
+  </div>
+  `;
+
+  document.querySelector('#controls-wrapper').appendChild(modal);
+
+  var rows = "";
+
+  roundScores.forEach(function(roundScore) {
+    rows += "<tr><td>" + roundScore[0] + "</td><td>" + roundScore[1] + "</td><td>" + roundScore[2] + "</td><td>" + roundScore[3] + "</td></tr>";
+  });
+
+  $( rows ).appendTo( "#scores" );
+
+}
+
+
+function closeModal() {
+  $('.modal').remove();
+}
 
 //===================================
 // Reset all values except scoreboard
@@ -354,7 +439,6 @@ function deal(){
 
           let starter = fbDeck[0];
           starter.hidden = true;
-          console.log(starter);
           starterRef.push(starter);
           starterRef.on('value', function(snapshot) {
               let hand = snapshotToArray(snapshot);
@@ -383,9 +467,17 @@ player1HandRef.on('value', (snap)=>{
 
 player1ScoreRef.on('value', (snap)=>{
   let score = snap.val();
+  
+  //calculate the total score
+  let totalScore = 0;
+  scores = snap.val();
+  for (score in scores) {
+    totalScore += scores[score];
+  }
+
   //reset the players hand element
   player1ScoreEl.innerHTML='';
-  getScore(player1ScoreEl, score);
+  getScore(player1ScoreEl, totalScore);
 });
 
 //listen for change in value of player 2 hand
@@ -400,9 +492,17 @@ player2HandRef.on('value', (snap)=>{
 
 player2ScoreRef.on('value', (snap)=>{
   let score = snap.val();
+  
+  //calculate the total score
+  let totalScore = 0;
+  scores = snap.val();
+  for (score in scores) {
+    totalScore += scores[score];
+  }
+
   //reset the players hand element
   player2ScoreEl.innerHTML='';
-  getScore(player2ScoreEl, score);
+  getScore(player2ScoreEl, totalScore);
 });
 
 
@@ -415,9 +515,17 @@ player3HandRef.on('value', (snap)=>{
 
 player3ScoreRef.on('value', (snap)=>{
   let score = snap.val();
+  
+  //calculate the total score
+  let totalScore = 0;
+  scores = snap.val();
+  for (score in scores) {
+    totalScore += scores[score];
+  }
+
   //reset the players hand element
   player3ScoreEl.innerHTML='';
-  getScore(player3ScoreEl, score);
+  getScore(player3ScoreEl, totalScore);
 });
 
 
@@ -430,9 +538,17 @@ player4HandRef.on('value', (snap)=>{
 
 player4ScoreRef.on('value', (snap)=>{
   let score = snap.val();
+  
+  //calculate the total score
+  let totalScore = 0;
+  scores = snap.val();
+  for (score in scores) {
+    totalScore += scores[score];
+  }
+
   //reset the players hand element
   player4ScoreEl.innerHTML='';
-  getScore(player4ScoreEl, score);
+  getScore(player4ScoreEl, totalScore);
 });
 
 instructionRef.on('value', (snap)=>{
@@ -555,7 +671,6 @@ function checkTurn(player) {
 
 
 function getScore(player, score)  {
-
     player.innerHTML = score;
 }
 
@@ -760,20 +875,37 @@ function findScore(hand, player, pScore) {
 
      score = column1 + column2 + column3;
 
-     console.log(score);
+     pScore.push(score);
 
-     var currentScore;
+     // let totalScore = 0;
 
-    pScore.once('value', (snap)=> {
-      currentScore = snap.val();
-      console.log(currentScore);
-    });
+     // pScore.once('value', (snap)=> {
+     //  scores = snap.val();
+     //  for (score in scores) {
+     //    console.log(scores[score]);
+     //    totalScore += scores[score];
+     //    console.log(totalScore);
+     //  }
 
-    var newScore = currentScore + score;
-                    
-    pScore.set(newScore);
+     // });
 
-    getScore(player, newScore);
+     // console.log(totalScore);
+
+     //  getScore(player, totalScore);
+
+     // getScore(player, pScore[0]);
+
+     // var currentScore;
+
+    // pScore.once('value', (snap)=> {
+    //   currentScore = snap.val();
+    //   console.log(currentScore);
+    //   // currentScore.push(score);
+      
+    //   getScore(player, currentScore[1]);
+    // });
+
+    // var newScore = currentScore + score
 
 }
 

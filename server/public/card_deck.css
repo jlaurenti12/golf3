@@ -296,7 +296,7 @@ button {
 }
 
 .selected {
-  box-shadow: 0 0 10px rgba(255,255,255,1);
+  box-shadow: 0 0 20px rgba(255,255,255,1);
 }
 
 .Clubs {
@@ -383,6 +383,16 @@ button {
 
 .hide-modal {
   display: none;
+}
+
+
+#scores {
+  width: 100%;
+  text-align: center;
+}
+
+.score {
+  margin-bottom:  8px;
 }
 
 /* MOBILE  STYLES */
