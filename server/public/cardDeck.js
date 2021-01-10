@@ -64,6 +64,8 @@ player3ScoreRef.set([]);
 player4HandRef.set({player4Cards:[]});
 player4ScoreRef.set([]);
 
+let resetCount = 0;
+
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('');
 passRef.set(false);
@@ -333,6 +335,13 @@ function closeModal() {
 
 resetButton.addEventListener('click', (e) => {
   e.preventDefault();
+
+  if (resetCount < 3) {
+    resetCount++;
+  } else {
+    resetCount = 0;
+  }
+
 
   resetRef.once('value', (snap)=>{
     let val = snap.val();
@@ -1151,7 +1160,18 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
           starter[0].hidden = false;
           getStarter(starterEl, starter);
           starterRef.set(starter);
-          turnRef.set('player1');
+
+          //check for reset count
+          if (resetCount === 0) {
+            turnRef.set('player1');
+          } else if (resetCount === 1) {
+             turnRef.set('player2');
+          } else if (resetCount === 2) {
+             turnRef.set('player3');
+          } else if (resetCount === 3) {
+             turnRef.set('player4');
+          }
+         
           instructionRef.set('post-flip');
 
           instructionRef.on('value', (snap)=>{
