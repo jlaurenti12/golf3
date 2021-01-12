@@ -27,6 +27,7 @@ let deckRef = DeckReference.child('deckoCards');
 let turnRef = DeckReference.child('turns');
 let lastTurnRef = DeckReference.child('lastTurns')
 let passRef = DeckReference.child('passVisible');
+let resetCountRef = DeckReference.child('resetCount');
 let Player1Ref = DeckReference.child('player1');
 let player1HandRef = Player1Ref.child('player1Hand');
 let player1ScoreRef = Player1Ref.child('player1score');
@@ -64,7 +65,7 @@ player3ScoreRef.set([]);
 player4HandRef.set({player4Cards:[]});
 player4ScoreRef.set([]);
 
-let resetCount = 0;
+resetCountRef.set(0);
 
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('');
@@ -336,11 +337,19 @@ function closeModal() {
 resetButton.addEventListener('click', (e) => {
   e.preventDefault();
 
-  if (resetCount < 3) {
-    resetCount++;
-  } else {
-    resetCount = 0;
-  }
+
+  resetCountRef.once('value', (snap)=>{
+    let count = snap.val();
+
+    if (count < 3) {
+      count++;
+    } else {
+      count = 0;
+    }
+
+    resetCountRef.set(count);
+
+  });
 
 
   resetRef.once('value', (snap)=>{
@@ -1162,15 +1171,19 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
           starterRef.set(starter);
 
           //check for reset count
-          if (resetCount === 0) {
-            turnRef.set('player1');
-          } else if (resetCount === 1) {
-             turnRef.set('player2');
-          } else if (resetCount === 2) {
-             turnRef.set('player3');
-          } else if (resetCount === 3) {
-             turnRef.set('player4');
-          }
+          resetCountRef.once('value', (snap)=>{
+            let count = snap.val();
+
+            if (count === 0) {
+              turnRef.set('player1');
+            } else if (count === 1) {
+               turnRef.set('player2');
+            } else if (count === 2) {
+               turnRef.set('player3');
+            } else if (count === 3) {
+               turnRef.set('player4');
+            }
+          });
          
           instructionRef.set('post-flip');
 
