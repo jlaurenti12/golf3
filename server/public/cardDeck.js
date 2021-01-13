@@ -49,7 +49,7 @@ let starterRef = DeckReference.child('starter');
 let discardedCardsRef = DeckReference.child('discardedCards');
 
 let dealRef = DeckReference.child('deal');
-// let coinFlipRef = DeckReference.child('coinFlip');
+let coinFlipRef = DeckReference.child('coinFlip');
 let resetRef = DeckReference.child('reset');
 
 //set the player hands to empty on page load
@@ -75,7 +75,7 @@ instructionRef.set('pre-deal');
 
 resetRef.set(false);
 dealRef.set(false);
-// coinFlipRef.set({ player1: '', player2: '' });
+coinFlipRef.set({ player1: '', player2: '', player3: '', player4: ''});
 
 // remove the game's firebase node when the players leave the page
 window.addEventListener('beforeunload', (event) => {
@@ -199,48 +199,52 @@ let scoresButton = document.querySelector('#scoresEl');
 // get count element
 let countEl = document.querySelector('.count');
 
-// determine if player 1 or 2
-// coinFlipRef.once('value', (snap) => {
-//   let val = snap.val();
-//   console.log(val);
-//   if(!val) {
-//     val = {player1: "Player 1", player2: ""};
-//     console.log(val);
-//     $hand1Curtain.hide();
-//     player2El.classList.add('hide', 'noClick');
-//     coinFlipRef.set(val);
-//     $showButton2.addClass('hide noClick');
-//     showModal(val.player1);
-//   } else if(val.player1 === "Player 1") {
-//     val.player2 = 'Player 2';
-//     console.log(val);
-//     $hand2Curtain.hide();
-//     player1El.classList.add('hide', 'noClick');
-//     coinFlipRef.set(val);
-//     $showButton1.addClass('hide noClick');
-//     showModal(val.player2);
-//   }
-// })
+// determine if player 1,2,3,4
+coinFlipRef.once('value', (snap) => {
+  let val = snap.val();
+  console.log(val);
+  if(val.player1 === '') {
+    val = {player1: "Player 1", player2: "", player3: "", player4: ""};
+    console.log(val);
+    coinFlipRef.set(val);
+    playerModal(val.player1);
+  } else if (val.player1 === '') {
+    val.player2 = 'Player 2';
+    console.log(val);
+    coinFlipRef.set(val);
+    playerModal(val.player2);
+  } else if (val.player2 === "Player 2") {
+    val.player3 = 'Player 3';
+    console.log(val);
+    coinFlipRef.set(val);
+    playerModal(val.player3);
+  } else if (val.player3 === "Player 3") {
+    val.player4 = 'Player 4';
+    console.log(val);
+    coinFlipRef.set(val);
+    playerModal(val.player4);
+  }
+})
 
-// function showModal(playerNum) {
-//   let modal = document.createElement('div');
-//   modal.classList.add('modal');
-//   modal.innerHTML = `
-//   <div class="modal-content">
-//     <h3>You are ${playerNum}!</h3>
-//     <p class="modal-description">Welcome to online cribbage! Here's some important info before you get started.</p>
-//     <ul>
-//     <li>The game will reset if you or the other player reloads or refreshes the page.</li>
-//     <li>As ${playerNum}, you will not see the other player's cards until they are played.</li>
-//     <li>The link to this game will be valid for 24 hours after it was created.</li>
-//     <li>The first two cards you click in your hand will go to the crib, the rest will go to the play.</li>
-//     <li>If you need to look up the rules, <a href="https://bicyclecards.com/how-to-play/cribbage/" target="_blank" rel="noopener">click here</a>.</li>
-//     <p>That's it, have fun!</p>
-//     <span class="modal-close" onclick="closeModal()">x</span>
-//   </div>
-//   `;
-//   document.querySelector('#controls-wrapper').appendChild(modal);
-// }
+function playerModal(playerNum) {
+  let modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.innerHTML = `
+  <div class="modal-content">
+    <h3>You are ${playerNum}!</h3>
+    <p class="modal-description">Welcome to online cribbage! Here's some important info before you get started.</p>
+    <ul>
+    <li>The game will reset if you or the other player reloads or refreshes the page.</li>
+    <li>As ${playerNum}, you will not see the other player's cards until they are played.</li>
+    <li>The link to this game will be valid for 24 hours after it was created.</li>
+    <li>The first two cards you click in your hand will go to the crib, the rest will go to the play.</li>
+    <li>If you need to look up the rules, <a href="https://bicyclecards.com/how-to-play/cribbage/" target="_blank" rel="noopener">click here</a>.</li>
+    <p>That's it, have fun!</p>
+    <span class="modal-close" onclick="closeModal()">x</span>
+  </div>
+  `;
+  document.querySelector('#controls-wrapper').appendChild(modal);
+}
 
 scoresButton.addEventListener('click', showModal);
 
