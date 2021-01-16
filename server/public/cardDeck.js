@@ -28,6 +28,9 @@ let turnRef = DeckReference.child('turns');
 let lastTurnRef = DeckReference.child('lastTurns')
 let passRef = DeckReference.child('passVisible');
 let resetCountRef = DeckReference.child('resetCount');
+let holesRef = DeckReference.child('holes');
+
+
 let Player1Ref = DeckReference.child('player1');
 let player1HandRef = Player1Ref.child('player1Hand');
 let player1ScoreRef = Player1Ref.child('player1score');
@@ -49,7 +52,7 @@ let starterRef = DeckReference.child('starter');
 let discardedCardsRef = DeckReference.child('discardedCards');
 
 let dealRef = DeckReference.child('deal');
-let coinFlipRef = DeckReference.child('coinFlip');
+// let coinFlipRef = DeckReference.child('coinFlip');
 let resetRef = DeckReference.child('reset');
 
 //set the player hands to empty on page load
@@ -66,6 +69,7 @@ player4HandRef.set({player4Cards:[]});
 player4ScoreRef.set([]);
 
 resetCountRef.set(0);
+holesRef.set(0);
 
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('');
@@ -75,7 +79,7 @@ instructionRef.set('pre-deal');
 
 resetRef.set(false);
 dealRef.set(false);
-coinFlipRef.set({ player1: '', player2: '', player3: '', player4: ''});
+// coinFlipRef.set({ player1: '', player2: '', player3: '', player4: ''});
 
 // remove the game's firebase node when the players leave the page
 window.addEventListener('beforeunload', (event) => {
@@ -191,7 +195,7 @@ let player4ScoreEl = document.querySelector('#player4Score');
 
 //get button elements
 let dealButton = document.querySelector('#dealEl');
-let resetButton = document.querySelector('#resetEl');
+// let resetButton = document.querySelector('#resetEl');
 let scoresButton = document.querySelector('#scoresEl');
 
 
@@ -200,51 +204,51 @@ let scoresButton = document.querySelector('#scoresEl');
 let countEl = document.querySelector('.count');
 
 // determine if player 1,2,3,4
-coinFlipRef.once('value', (snap) => {
-  let val = snap.val();
-  console.log(val);
-  if(val.player1 === '') {
-    val = {player1: "Player 1", player2: "", player3: "", player4: ""};
-    console.log(val);
-    coinFlipRef.set(val);
-    playerModal(val.player1);
-  } else if (val.player1 === '') {
-    val.player2 = 'Player 2';
-    console.log(val);
-    coinFlipRef.set(val);
-    playerModal(val.player2);
-  } else if (val.player2 === "Player 2") {
-    val.player3 = 'Player 3';
-    console.log(val);
-    coinFlipRef.set(val);
-    playerModal(val.player3);
-  } else if (val.player3 === "Player 3") {
-    val.player4 = 'Player 4';
-    console.log(val);
-    coinFlipRef.set(val);
-    playerModal(val.player4);
-  }
-})
+// coinFlipRef.once('value', (snap) => {
+//   let val = snap.val();
+//   console.log(val);
+//   if(val.player1 === '') {
+//     val = {player1: "Player 1", player2: "", player3: "", player4: ""};
+//     console.log(val);
+//     coinFlipRef.set(val);
+//     playerModal(val.player1);
+//   } else if (val.player1 === '') {
+//     val.player2 = 'Player 2';
+//     console.log(val);
+//     coinFlipRef.set(val);
+//     playerModal(val.player2);
+//   } else if (val.player2 === "Player 2") {
+//     val.player3 = 'Player 3';
+//     console.log(val);
+//     coinFlipRef.set(val);
+//     playerModal(val.player3);
+//   } else if (val.player3 === "Player 3") {
+//     val.player4 = 'Player 4';
+//     console.log(val);
+//     coinFlipRef.set(val);
+//     playerModal(val.player4);
+//   }
+// })
 
-function playerModal(playerNum) {
-  let modal = document.createElement('div');
-  modal.classList.add('modal');
-  modal.innerHTML = `
-  <div class="modal-content">
-    <h3>You are ${playerNum}!</h3>
-    <p class="modal-description">Welcome to online cribbage! Here's some important info before you get started.</p>
-    <ul>
-    <li>The game will reset if you or the other player reloads or refreshes the page.</li>
-    <li>As ${playerNum}, you will not see the other player's cards until they are played.</li>
-    <li>The link to this game will be valid for 24 hours after it was created.</li>
-    <li>The first two cards you click in your hand will go to the crib, the rest will go to the play.</li>
-    <li>If you need to look up the rules, <a href="https://bicyclecards.com/how-to-play/cribbage/" target="_blank" rel="noopener">click here</a>.</li>
-    <p>That's it, have fun!</p>
-    <span class="modal-close" onclick="closeModal()">x</span>
-  </div>
-  `;
-  document.querySelector('#controls-wrapper').appendChild(modal);
-}
+// function playerModal(playerNum) {
+//   let modal = document.createElement('div');
+//   modal.classList.add('modal');
+//   modal.innerHTML = `
+//   <div class="modal-content">
+//     <h3>You are ${playerNum}!</h3>
+//     <p class="modal-description">Welcome to online cribbage! Here's some important info before you get started.</p>
+//     <ul>
+//     <li>The game will reset if you or the other player reloads or refreshes the page.</li>
+//     <li>As ${playerNum}, you will not see the other player's cards until they are played.</li>
+//     <li>The link to this game will be valid for 24 hours after it was created.</li>
+//     <li>The first two cards you click in your hand will go to the crib, the rest will go to the play.</li>
+//     <li>If you need to look up the rules, <a href="https://bicyclecards.com/how-to-play/cribbage/" target="_blank" rel="noopener">click here</a>.</li>
+//     <p>That's it, have fun!</p>
+//     <span class="modal-close" onclick="closeModal()">x</span>
+//   </div>
+//   `;
+//   document.querySelector('#controls-wrapper').appendChild(modal);
+// }
 
 scoresButton.addEventListener('click', showModal);
 
@@ -306,6 +310,7 @@ function showModal() {
     <span class="modal-close" onclick="closeModal()">x</span>
     <table id="scores">
       <tr>
+        <th>Holes</th>
         <th>Player 1</th>
         <th>Player 2</th>
         <th>Player 3</th>
@@ -317,13 +322,15 @@ function showModal() {
 
   document.querySelector('#controls-wrapper').appendChild(modal);
 
+
   var rows = "";
 
-  roundScores.forEach(function(roundScore) {
-    rows += "<tr><td>" + roundScore[0] + "</td><td>" + roundScore[1] + "</td><td>" + roundScore[2] + "</td><td>" + roundScore[3] + "</td></tr>";
-  });
+    roundScores.forEach(function(roundScore) {
+      rows += "<tr><td>" + (roundScores.indexOf(roundScore) + 1) + "</td><td>" + roundScore[0] + "</td><td>" + roundScore[1] + "</td><td>" + roundScore[2] + "</td><td>" + roundScore[3] + "</td></tr>";
+    });
 
-  $( rows ).appendTo( "#scores" );
+    $( rows ).appendTo( "#scores" );
+      
 
 }
 
@@ -338,39 +345,39 @@ function closeModal() {
 //===================================
 
 
-resetButton.addEventListener('click', (e) => {
-  e.preventDefault();
+// resetButton.addEventListener('click', (e) => {
+//   e.preventDefault();
 
 
-  resetCountRef.once('value', (snap)=>{
-    let count = snap.val();
+//   resetCountRef.once('value', (snap)=>{
+//     let count = snap.val();
 
-    if (count < 3) {
-      count++;
-    } else {
-      count = 0;
-    }
+//     if (count < 3) {
+//       count++;
+//     } else {
+//       count = 0;
+//     }
 
-    resetCountRef.set(count);
+//     resetCountRef.set(count);
 
-  });
+//   });
 
 
-  resetRef.once('value', (snap)=>{
-    let val = snap.val();
-    val = !val;
-    resetRef.set(val);
-  })
-})
+//   resetRef.once('value', (snap)=>{
+//     let val = snap.val();
+//     val = !val;
+//     resetRef.set(val);
+//   })
+// })
 
 
 
 resetRef.on('value', (snap)=> {
   //set the player hands to empty on page load
-  player1HandRef.set({player1Cards:[]});
-  player2HandRef.set({player2Cards:[]});
-  player3HandRef.set({player3Cards:[]});
-  player4HandRef.set({player4Cards:[]});
+  // player1HandRef.set({player1Cards:[]});
+  // player2HandRef.set({player2Cards:[]});
+  // player3HandRef.set({player3Cards:[]});
+  // player4HandRef.set({player4Cards:[]});
 
   // player1ScoreRef.set("--");
   // player2ScoreRef.set("--");
@@ -379,7 +386,7 @@ resetRef.on('value', (snap)=> {
 
   turnRef.set('');
   passRef.set(false);
-  instructionRef.set('pre-deal');
+  // instructionRef.set('pre-deal');
   lastTurnRef.set(false);
 
 
@@ -387,13 +394,12 @@ resetRef.on('value', (snap)=> {
   discardedCardsRef.set({discardedCards:[]});
   // counterRef.set(0);
 
+  // dealRef.set(false);
+
   // create a new deck and shuffle it
   cardDeck = new Deck();
   cardDeck.createDeck(suits, values, ranks);
   cardDeck.shuffle();
-
-
-  dealRef.set(false);
 
 });
 
@@ -418,26 +424,76 @@ function snapshotToArray(snapshot) {
 
 function deal(){
 
+  resetRef.once('value', (snap)=>{
+    let val = snap.val();
+    val = !val;
+    resetRef.set(val);
+  });
+
+  player1HandRef.set({player1Cards:[]});
+  player2HandRef.set({player2Cards:[]});
+  player3HandRef.set({player3Cards:[]});
+  player4HandRef.set({player4Cards:[]});
+
+
+  instructionRef.once('value', (snap)=>{
+    let state = snap.val();
+    console.log(state);
+
+      if (state === "post-round") {
+        resetCountRef.once('value', (snap)=>{
+          let count = snap.val();
+          console.log(count);
+
+          if (count < 3) {
+            count++;
+          } else {
+            count = 0;
+          }
+
+          resetCountRef.set(count);
+
+        });
+      }
+
+  });
+
+
   instructionRef.set('post-deal');
 
-  instructionRef.on('value', (snap)=>{
-    state = snap.val();
-    getInstructions(state);
-  })
+  holesRef.once('value', (snap)=>{
+    let hole = snap.val();
+    hole++
+
+    holesRef.set(hole);
+  });
+
 
   dealRef.once('value', (snap)=>{
     deal = snap.val();
+
+    if (document.getElementById("new")){
+      console.log('new clicked');
+      player1HandRef.set({player1Cards:[]});
+      player2HandRef.set({player2Cards:[]});
+      player3HandRef.set({player3Cards:[]});
+      player4HandRef.set({player4Cards:[]});
+      holesRef.set(1);
+      dealRef.set(false);
+      instructionRef.set('post-deal');
+      resetCountRef.set(0);
+      player1ScoreRef.set(0);
+      player2ScoreRef.set(0);
+      player3ScoreRef.set(0);
+      player4ScoreRef.set(0);
+    }
   
     if (deal) {}
     else {
       dealRef.set(true);
-      getDeal(true);
-
 
       deckRef.once('value', (snap)=>{
         let fbDeck = snap.val();
-
-        //added code
         let turn = 0;
 
         for (i = 0; i < 24; i++) {
@@ -469,6 +525,7 @@ function deal(){
 
         fbDeck.shift();
         deckRef.set(fbDeck);
+        instructionRef.set('post-deal');
       });
 
       }
@@ -597,47 +654,17 @@ turnRef.on('value', (snap)=>{
 
 dealRef.on('value', (snap)=>{
   let deal = snap.val();
-  getDeal(deal);
+  
+  holesRef.once('value', (snap)=>{
+    let hole = snap.val();
+    getDeal(deal, hole);
+  })
 })
-// count1Ref.on('value', (snap)=>{
-//   let hand = snap.val();
-//   // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
-//   autoCribRef.once('value', (snap) => {
-//     let val = snap.val();
-//     if(val.fbAutoCrib1 === 2) {
-//       console.log('render POT1');
-//       player1PotEl.innerHTML = '';
-//       getFBHand(player1PotEl, hand);
-//     } else if(val.fbAutoCrib1 < 2) {
-//       // console.log('render CRIB1');
-//       player1CribEl.innerHTML = '';
-//       getFBHand(player1CribEl, hand)
-//     }
-//   })
-// })
 
-// count2Ref.on('value', (snap)=>{
-//   let hand = snap.val();
-//   // let val = document.querySelector('input[name="cribPotRadio"]:checked').value;
-//   autoCribRef.once('value', (snap) => {
-//     let val = snap.val();
-
-//     if(val.fbAutoCrib2 === 2) {
-//       console.log('render POT2')
-//       player2PotEl.innerHTML = '';
-//       getFBHand(player2PotEl, hand);
-//     } else if(val.fbAutoCrib2 < 2) {
-//       // console.log('render CRIB2')
-//       player2CribEl.innerHTML = '';
-//       getFBHand(player2CribEl, hand)
-//     }
-//   })
-// })
-
-// counterRef.on('value', (snap) => {
-//   let count = snap.val();
-//   countEl.innerHTML = count;
-// })
+holesRef.on('value', (snap)=>{
+  let hole = snap.val();
+  getHoleCount(hole);
+})
 
 //this runs every time there is a change in a player's hand in the database
 //for each key in hand, create HTML element and append to hand element
@@ -697,15 +724,31 @@ function getScore(player, score)  {
 }
 
 
-function getDeal(deal) {
-  if (deal) {
+function getDeal(deal, hole) {
+  console.log('deal is ' + deal);
+  console.log('hole is ' + hole);
+  if (deal === false && hole === 9) {
+    dealButton.classList.remove("buttonInactive");
+    dealButton.innerHTML = "New Game";
+    dealButton.id = "new";
+  }  
+  else if (deal) {
     dealButton.classList.add("buttonInactive");
-    resetButton.classList.remove("buttonInactive");
-
+    dealButton.innerHTML = "Next Hole";
+    dealButton.id = "next";
+    // resetButton.classList.remove("buttonInactive");
+  } else if (deal === false && hole === 0){
+    dealButton.innerHTML = "Deal";
+    dealButton.id = "deal";
   } else {
     dealButton.classList.remove("buttonInactive");
-    resetButton.classList.add("buttonInactive");
+    // resetButton.classList.add("buttonInactive");
   }
+}
+
+
+function getHoleCount(hole) {
+  $('#holeCount').html(hole);
 }
 
 
@@ -719,12 +762,19 @@ function showHide(passVis) {
 }
 
 function getInstructions(state) {
+  console.log(state);
   if (state === 'pre-deal') {
     instructions.style.visibility = 'visible';
     instructions.innerHTML = `<span>Click Deal to start!</span>`;
   } else if (state === 'post-deal') {
     instructions.style.visibility = 'visible';
     instructions.innerHTML = `<span>Everyone flip 2 cards!</span>`;
+  } else if (state === 'post-round') {
+    instructions.style.visibility = 'visible';
+    instructions.innerHTML = `<span>Click next hole to continue!</span>`;
+  } else if (state === 'game-over') {
+    instructions.style.visibility = 'visible';
+    instructions.innerHTML = `<span>Game Over!</span>`;
   } else {
     instructions.style.visibility = 'hidden';
   }
@@ -859,7 +909,79 @@ function checkAllVisible(hand, player, pScore) {
     lastTurnRef.set(true);
   }
 
+  checkRoundFinish();
+
 };
+
+
+function checkRoundFinish(){
+  let count = 0;
+
+  player1HandRef.once('value', (snap)=>{
+    let p1 = snap.val();
+
+    for (key in p1) {
+      let fbHidden = p1[key]['hidden'];
+      if (fbHidden == false) {
+        count++
+      }
+    }
+   });
+
+
+    player2HandRef.once('value', (snap)=>{
+    let p2 = snap.val();
+
+    for (key in p2) {
+      let fbHidden = p2[key]['hidden'];
+      if (fbHidden == false) {
+        count++
+      }
+    }
+   });
+
+    player3HandRef.once('value', (snap)=>{
+    let p3 = snap.val();
+
+    for (key in p3) {
+      let fbHidden = p3[key]['hidden'];
+      if (fbHidden == false) {
+        count++
+      }
+    }
+   });
+
+    player4HandRef.once('value', (snap)=>{
+    let p4 = snap.val();
+
+    for (key in p4) {
+      let fbHidden = p4[key]['hidden'];
+      if (fbHidden == false) {
+        count++
+      }
+    }
+   });
+
+  // checkGameFinish();
+
+  holesRef.once('value', (snap)=>{
+    let hole = snap.val();
+
+     if (count === 24 && hole === 9) {
+      instructionRef.set('game-over');
+      dealRef.set(false);
+      // getDeal(false, hole);
+     }
+     else if (count === 24) {
+      instructionRef.set('post-round');
+      dealRef.set(false)
+      // getDeal(false, hole);
+
+    }
+
+  });
+
+}
 
 
 function findScore(hand, player, pScore) {
@@ -898,36 +1020,6 @@ function findScore(hand, player, pScore) {
      score = column1 + column2 + column3;
 
      pScore.push(score);
-
-     // let totalScore = 0;
-
-     // pScore.once('value', (snap)=> {
-     //  scores = snap.val();
-     //  for (score in scores) {
-     //    console.log(scores[score]);
-     //    totalScore += scores[score];
-     //    console.log(totalScore);
-     //  }
-
-     // });
-
-     // console.log(totalScore);
-
-     //  getScore(player, totalScore);
-
-     // getScore(player, pScore[0]);
-
-     // var currentScore;
-
-    // pScore.once('value', (snap)=> {
-    //   currentScore = snap.val();
-    //   console.log(currentScore);
-    //   // currentScore.push(score);
-      
-    //   getScore(player, currentScore[1]);
-    // });
-
-    // var newScore = currentScore + score
 
 }
 
@@ -1191,10 +1283,10 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
          
           instructionRef.set('post-flip');
 
-          instructionRef.on('value', (snap)=>{
-            state = snap.val();
-            getInstructions(state);
-          })
+          // instructionRef.on('value', (snap)=>{
+          //   state = snap.val();
+          //   getInstructions(state);
+          // })
         }
       
         turnRef.once('value', (snap)=> {

@@ -24,6 +24,20 @@ h3 {
   margin-top: 0;
 }
 
+
+hr {
+  margin-bottom: 10px;
+}
+
+.scores {
+  margin-top: 16px;
+  font-weight: bold;
+}
+
+#holeCount {
+  font-weight: bold;
+}
+
 /* INTRO
 ====================== */
 .modal-wrapper {
@@ -60,7 +74,7 @@ h3 {
 }
 
 .score1, .score2, .gameKey  {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 

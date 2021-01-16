@@ -25,11 +25,14 @@
   <section id="controls-wrapper">
     <button id="dealEl">Deal</button>
 
-    <button id="resetEl" class="buttonInactive">Reset</button>
+<!--     <button id="resetEl" class="buttonInactive">Next Round</button> -->
 
       <!-- SCOREBOARD -->
     <div id="scoreboard">
       <div class="gameKey">Private Game Key: <span><%= gameNum %></span></div>
+      <div class="gameKey">Current Hole: <span id="holeCount"></span></div>
+      <div class="scores">Total Scores</div>
+      <hr>
       <section class="score1">
         <label for="score1-counter">Player 1:</label>
         <span id="player1Score"><span>
@@ -46,7 +49,7 @@
         <label for="score2-counter">Player 4:</label>
         <span id="player4Score"><span>
       </section>
-      <button id="scoresEl">Scores By Round</button>
+      <button id="scoresEl">Scores Per Round</button>
     </div>
   </section>
     <!-- Player 1 wrapper -->
