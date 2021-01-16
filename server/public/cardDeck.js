@@ -1262,6 +1262,7 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
       let starter = snap.val();
 
         if (checkForStart() === 7 ){
+          instructionRef.set('post-flip');
           starter[0].hidden = false;
           getStarter(starterEl, starter);
           starterRef.set(starter);
@@ -1281,8 +1282,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
             }
           });
          
-          instructionRef.set('post-flip');
-
           // instructionRef.on('value', (snap)=>{
           //   state = snap.val();
           //   getInstructions(state);
