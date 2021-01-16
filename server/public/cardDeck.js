@@ -390,7 +390,7 @@ resetRef.on('value', (snap)=> {
   lastTurnRef.set(false);
 
 
-  starterRef.set([]);
+  // starterRef.set([]);
   discardedCardsRef.set({discardedCards:[]});
   // counterRef.set(0);
 
@@ -429,6 +429,8 @@ function deal(){
     val = !val;
     resetRef.set(val);
   });
+
+  starterRef.set([]);
 
   player1HandRef.set({player1Cards:[]});
   player2HandRef.set({player2Cards:[]});
@@ -492,6 +494,7 @@ function deal(){
     else {
       dealRef.set(true);
 
+
       deckRef.once('value', (snap)=>{
         let fbDeck = snap.val();
         let turn = 0;
@@ -521,6 +524,7 @@ function deal(){
           starterRef.on('value', function(snapshot) {
               let hand = snapshotToArray(snapshot);
               starterRef.set(hand);
+              console.log(hand);
           });
 
         fbDeck.shift();
@@ -1261,8 +1265,9 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
     starterRef.once('value', (snap)=> {
       let starter = snap.val();
 
+        console.log(starter);
+
         if (checkForStart() === 7 ){
-          instructionRef.set('post-flip');
           starter[0].hidden = false;
           getStarter(starterEl, starter);
           starterRef.set(starter);
@@ -1281,6 +1286,8 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
                turnRef.set('player4');
             }
           });
+
+         instructionRef.set('post-flip');
          
           // instructionRef.on('value', (snap)=>{
           //   state = snap.val();
