@@ -1291,70 +1291,75 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
       
         turnRef.once('value', (snap)=> {
         let turn = snap.val();
-  
-        let starterSelected = starter[0].selected;
-        let starterSuit = starter[0].suit;
-        let starterValue = starter[0].value;
-        let starterHidden = starter[0].hidden;
-        let starterRank = starter[0].rank;
 
-        if (starterSelected && turn === playerEl.classList[0]) {
-          var answer = confirm('Do you want to switch?');
-          if (answer) {
-            for (key in hand) {
-              let fbSuit = hand[key]['suit'];
-              let fbValue = hand[key]['value'];
-              let fbHidden = hand[key]['hidden'];
-              let fbRank = hand[key]['rank'];
-              let fbSelected = hand[key]['selected'];
+        console.log(starter);
+
+        if (starter !== null) {
+          let starterSelected = starter[0].selected;
+          let starterSuit = starter[0].suit;
+          let starterValue = starter[0].value;
+          let starterHidden = starter[0].hidden;
+          let starterRank = starter[0].rank;
+
+          if (starterSelected && turn === playerEl.classList[0]) {
+            var answer = confirm('Do you want to switch?');
+            if (answer) {
+              for (key in hand) {
+                let fbSuit = hand[key]['suit'];
+                let fbValue = hand[key]['value'];
+                let fbHidden = hand[key]['hidden'];
+                let fbRank = hand[key]['rank'];
+                let fbSelected = hand[key]['selected'];
 
 
-              if (hand[key]['suit'] === suit && hand[key]['value'].toString() === value) {
+                if (hand[key]['suit'] === suit && hand[key]['value'].toString() === value) {
 
-                  hand[key]['suit'] = starterSuit;
-                  hand[key]['value'] = starterValue;
-                  hand[key]['hidden'] = starterHidden;
-                  hand[key]['rank'] = starterRank;
+                    hand[key]['suit'] = starterSuit;
+                    hand[key]['value'] = starterValue;
+                    hand[key]['hidden'] = starterHidden;
+                    hand[key]['rank'] = starterRank;
+                      
+                    playerEl.innerHTML='';
+                    getFBHand(playerEl, hand);
+                    playerHand.set(hand);
+
+                    starter[0].suit = fbSuit;
+                    starter[0].value = fbValue;
+                    starter[0].rank = fbRank;
+                    starter[0].selected = false;
                     
-                  playerEl.innerHTML='';
-                  getFBHand(playerEl, hand);
-                  playerHand.set(hand);
+                    passRef.set(false);
+                    starterEl.innerHTML = '';
+                    getStarter(starterEl, starter);
+                    starterRef.set(starter);
 
-                  starter[0].suit = fbSuit;
-                  starter[0].value = fbValue;
-                  starter[0].rank = fbRank;
-                  starter[0].selected = false;
-                  
-                  passRef.set(false);
-                  starterEl.innerHTML = '';
-                  getStarter(starterEl, starter);
-                  starterRef.set(starter);
+                    switchTurns(playerEl.classList[0]);
 
-                  switchTurns(playerEl.classList[0]);
+                    lastTurnRef.once('value', (snap)=> {
+                    let last = snap.val();
 
-                  lastTurnRef.once('value', (snap)=> {
-                  let last = snap.val();
-
-                    if (last) {
-                      for (key in hand) {
-                        hand[key]['hidden'] = false;
+                      if (last) {
+                        for (key in hand) {
+                          hand[key]['hidden'] = false;
+                        }
+                        playerEl.innerHTML='';
+                        getFBHand(playerEl, hand);
+                        playerHand.set(hand);
+                        checkAllVisible(hand, playerEl.classList[0], playerScore);
+                      } else {
+                        checkAllVisible(hand, playerEl.classList[0], playerScore);
                       }
-                      playerEl.innerHTML='';
-                      getFBHand(playerEl, hand);
-                      playerHand.set(hand);
-                      checkAllVisible(hand, playerEl.classList[0], playerScore);
-                    } else {
-                      checkAllVisible(hand, playerEl.classList[0], playerScore);
-                    }
 
-                  });
+                    });
+
+                }
+
 
               }
 
-
             }
-
           }
+
         }
 
 
@@ -1379,6 +1384,7 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
               } else 
 
               if (fbSuit === suit && fbValue.toString() === value) {
+                console.log(fbSuit);
                   if (fbHidden) {
                     hand[key]['hidden'] = false;
                   }
