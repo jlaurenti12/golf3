@@ -1004,24 +1004,47 @@ function findScore(hand, player, pScore) {
     var column1 = 0;
     var column2 = 0;
     var column3 = 0;
+    var row1 = 0;
+    var row2 = 0;
 
+
+    function rows(row, a, b, c, d, e, f) {
+      if (a === b && b === c) {
+        rowScore = 0;
+      } else {
+        rowScore = d + e + f;
+      }
+      return rowScore;
+    };
 
     function columns (column, a, b, c , d) {
       var columnScore;
 
       if (a === b) {
-        columnScore = 0
+        columnScore = 0;
+      } else if ((a === 'joker1' || a === 'joker2') && (b === 'joker1' || b === 'joker2')) {
+        columnScore = 0;
       } else {
-        columnScore = c + d
+        columnScore = c + d;
       }
       return columnScore
-    }
+    };
 
-     column1 = columns(column1, values[0], values[3], ranks[0], ranks[3]);
-     column2 = columns(column2, values[1], values[4], ranks[1], ranks[4]);
-     column3 = columns(column3, values[2], values[5], ranks[2], ranks[5]);
 
-     score = column1 + column2 + column3;
+     row1 = rows(row1, values[0], values[1], values[2], ranks[0], ranks[1], ranks[2]); 
+     row2 = rows(row2, values[3], values[4], values[5], ranks[3], ranks[4], ranks[5]); 
+
+     console.log(row1);
+     console.log(row2);
+
+     if (row1 === 0 || row2 === 0) {
+      score = row1 + row2;
+     } else {
+      column1 = columns(column1, values[0], values[3], ranks[0], ranks[3]);
+      column2 = columns(column2, values[1], values[4], ranks[1], ranks[4]);
+      column3 = columns(column3, values[2], values[5], ranks[2], ranks[5]);
+      score = column1 + column2 + column3;
+     }
 
      pScore.push(score);
 
