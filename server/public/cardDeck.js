@@ -475,7 +475,7 @@ function deal(){
     deal = snap.val();
 
     if (document.getElementById("new")){
-      console.log('new clicked');
+      // console.log('new clicked');
       player1HandRef.set({player1Cards:[]});
       player2HandRef.set({player2Cards:[]});
       player3HandRef.set({player3Cards:[]});
@@ -524,7 +524,6 @@ function deal(){
           starterRef.on('value', function(snapshot) {
               let hand = snapshotToArray(snapshot);
               starterRef.set(hand);
-              console.log(hand);
           });
 
         fbDeck.shift();
@@ -729,8 +728,8 @@ function getScore(player, score)  {
 
 
 function getDeal(deal, hole) {
-  console.log('deal is ' + deal);
-  console.log('hole is ' + hole);
+  // console.log('deal is ' + deal);
+  // console.log('hole is ' + hole);
   if (deal === false && hole === 9) {
     dealButton.classList.remove("buttonInactive");
     dealButton.innerHTML = "New Game";
@@ -766,7 +765,6 @@ function showHide(passVis) {
 }
 
 function getInstructions(state) {
-  console.log(state);
   if (state === 'pre-deal') {
     instructions.style.visibility = 'visible';
     instructions.innerHTML = `<span>Click Deal to start!</span>`;
@@ -1034,9 +1032,6 @@ function findScore(hand, player, pScore) {
      row1 = rows(row1, values[0], values[1], values[2], ranks[0], ranks[1], ranks[2]); 
      row2 = rows(row2, values[3], values[4], values[5], ranks[3], ranks[4], ranks[5]); 
 
-     console.log(row1);
-     console.log(row2);
-
      if (row1 === 0 || row2 === 0) {
       score = row1 + row2;
      } else {
@@ -1110,7 +1105,6 @@ remainingCard.addEventListener('click', (e)=>{
                discardedCardsRef.once('value', (snap)=>{
                let discarded = snap.val();
                discardedCardsRef.set({discardedCards:[]});
-               console.log(discarded);
                deckRef.set(shuffle(discarded));
               });
             }
@@ -1288,8 +1282,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
     starterRef.once('value', (snap)=> {
       let starter = snap.val();
 
-        console.log(starter);
-
         if (checkForStart() === 7 ){
           starter[0].hidden = false;
           getStarter(starterEl, starter);
@@ -1320,8 +1312,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
       
         turnRef.once('value', (snap)=> {
         let turn = snap.val();
-
-        console.log(starter);
 
         if (starter !== null) {
           let starterSelected = starter[0].selected;
@@ -1413,7 +1403,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
               } else 
 
               if (fbSuit === suit && fbValue.toString() === value) {
-                console.log(fbSuit);
                   if (fbHidden) {
                     hand[key]['hidden'] = false;
                   }
