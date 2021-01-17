@@ -384,22 +384,21 @@ resetRef.on('value', (snap)=> {
   // player3ScoreRef.set("--");
   // player4ScoreRef.set("--");
 
-  turnRef.set('');
-  passRef.set(false);
+
+
   // instructionRef.set('pre-deal');
-  lastTurnRef.set(false);
 
 
   // starterRef.set([]);
-  discardedCardsRef.set({discardedCards:[]});
+
   // counterRef.set(0);
 
   // dealRef.set(false);
 
   // create a new deck and shuffle it
-  cardDeck = new Deck();
-  cardDeck.createDeck(suits, values, ranks);
-  cardDeck.shuffle();
+  // cardDeck = new Deck();
+  // cardDeck.createDeck(suits, values, ranks);
+  // cardDeck.shuffle();
 
 });
 
@@ -424,11 +423,11 @@ function snapshotToArray(snapshot) {
 
 function deal(){
 
-  resetRef.once('value', (snap)=>{
-    let val = snap.val();
-    val = !val;
-    resetRef.set(val);
-  });
+  // resetRef.once('value', (snap)=>{
+  //   let val = snap.val();
+  //   val = !val;
+  //   resetRef.set(val);
+  // });
 
   starterRef.set([]);
 
@@ -456,6 +455,13 @@ function deal(){
           resetCountRef.set(count);
 
         });
+        cardDeck = new Deck();
+        cardDeck.createDeck(suits, values, ranks);
+        cardDeck.shuffle();
+        turnRef.set('');
+        passRef.set(false);
+        lastTurnRef.set(false);
+        discardedCardsRef.set({discardedCards:[]});
       }
 
   });
@@ -488,6 +494,12 @@ function deal(){
       player2ScoreRef.set(0);
       player3ScoreRef.set(0);
       player4ScoreRef.set(0);
+      cardDeck = new Deck();
+      cardDeck.createDeck(suits, values, ranks);
+      cardDeck.shuffle();
+      passRef.set(false);
+      lastTurnRef.set(false);
+      discardedCardsRef.set({discardedCards:[]});
     }
   
     if (deal) {}
