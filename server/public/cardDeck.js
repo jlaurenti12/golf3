@@ -16,7 +16,6 @@
 
 // get the game's unique key from the EJS variable
 let gameKey = document.querySelector('#data').dataset.gamekey;
-// console.log(gameKey);
 
 // create a firebase node with the game's unique key
 let gameListRef = firebase.database().ref(`gameList_${gameKey}`);
@@ -29,6 +28,7 @@ let lastTurnRef = DeckReference.child('lastTurns')
 let passRef = DeckReference.child('passVisible');
 let resetCountRef = DeckReference.child('resetCount');
 let holesRef = DeckReference.child('holes');
+let visibleCardsRef = DeckReference.child('visibleCards');
 
 
 let Player1Ref = DeckReference.child('player1');
@@ -70,6 +70,7 @@ player4ScoreRef.set([]);
 
 resetCountRef.set(0);
 holesRef.set(0);
+visibleCardsRef.set(0);
 
 discardedCardsRef.set({discardedCards:[]});
 turnRef.set('');
@@ -77,8 +78,9 @@ passRef.set(false);
 lastTurnRef.set(false);
 instructionRef.set('pre-deal');
 
-resetRef.set(false);
 dealRef.set(false);
+resetRef.set(false);
+
 // coinFlipRef.set({ player1: '', player2: '', player3: '', player4: ''});
 
 // remove the game's firebase node when the players leave the page
@@ -339,68 +341,6 @@ function closeModal() {
   $('.modal').remove();
 }
 
-//===================================
-// Reset all values except scoreboard
-// on reset button click
-//===================================
-
-
-// resetButton.addEventListener('click', (e) => {
-//   e.preventDefault();
-
-
-//   resetCountRef.once('value', (snap)=>{
-//     let count = snap.val();
-
-//     if (count < 3) {
-//       count++;
-//     } else {
-//       count = 0;
-//     }
-
-//     resetCountRef.set(count);
-
-//   });
-
-
-//   resetRef.once('value', (snap)=>{
-//     let val = snap.val();
-//     val = !val;
-//     resetRef.set(val);
-//   })
-// })
-
-
-
-resetRef.on('value', (snap)=> {
-  //set the player hands to empty on page load
-  // player1HandRef.set({player1Cards:[]});
-  // player2HandRef.set({player2Cards:[]});
-  // player3HandRef.set({player3Cards:[]});
-  // player4HandRef.set({player4Cards:[]});
-
-  // player1ScoreRef.set("--");
-  // player2ScoreRef.set("--");
-  // player3ScoreRef.set("--");
-  // player4ScoreRef.set("--");
-
-
-
-  // instructionRef.set('pre-deal');
-
-
-  // starterRef.set([]);
-
-  // counterRef.set(0);
-
-  // dealRef.set(false);
-
-  // create a new deck and shuffle it
-  // cardDeck = new Deck();
-  // cardDeck.createDeck(suits, values, ranks);
-  // cardDeck.shuffle();
-
-});
 
 //============================================
 //call deal function when click on deal button
@@ -423,11 +363,6 @@ function snapshotToArray(snapshot) {
 
 function deal(){
 
-  // resetRef.once('value', (snap)=>{
-  //   let val = snap.val();
-  //   val = !val;
-  //   resetRef.set(val);
-  // });
 
   starterRef.set([]);
 
@@ -439,12 +374,10 @@ function deal(){
 
   instructionRef.once('value', (snap)=>{
     let state = snap.val();
-    console.log(state);
 
       if (state === "post-round") {
         resetCountRef.once('value', (snap)=>{
           let count = snap.val();
-          console.log(count);
 
           if (count < 3) {
             count++;
@@ -481,7 +414,6 @@ function deal(){
     deal = snap.val();
 
     if (document.getElementById("new")){
-      // console.log('new clicked');
       player1HandRef.set({player1Cards:[]});
       player2HandRef.set({player2Cards:[]});
       player3HandRef.set({player3Cards:[]});
@@ -667,19 +599,23 @@ turnRef.on('value', (snap)=>{
   checkTurn(player);
 })
 
-dealRef.on('value', (snap)=>{
-  let deal = snap.val();
-  
-  holesRef.once('value', (snap)=>{
-    let hole = snap.val();
-    getDeal(deal, hole);
-  })
-})
-
 holesRef.on('value', (snap)=>{
   let hole = snap.val();
   getHoleCount(hole);
 })
+
+dealRef.on('value', (snap)=>{
+  let deal = snap.val();
+  let hole;
+  
+  holesRef.once('value', (snap)=>{
+    hole = snap.val();
+  })
+
+  getDeal(deal, hole);
+})
+
+
 
 //this runs every time there is a change in a player's hand in the database
 //for each key in hand, create HTML element and append to hand element
@@ -740,24 +676,36 @@ function getScore(player, score)  {
 
 
 function getDeal(deal, hole) {
-  // console.log('deal is ' + deal);
-  // console.log('hole is ' + hole);
+
+  visibleCardsRef.set(checkRoundFinish());
+  let visibleCards;
+
+  visibleCardsRef.on('value', (snap)=>{
+    visibleCards = snap.val();
+  });
+
   if (deal === false && hole === 9) {
-    dealButton.classList.remove("buttonInactive");
+    dealButton.style.display = "inline-block";
+    dealButton.style.zIndex = "100";
     dealButton.innerHTML = "New Game";
     dealButton.id = "new";
-  }  
-  else if (deal) {
-    dealButton.classList.add("buttonInactive");
+    starterEl.style.display = "none";
+    remainingCard.style.display = "none";
+  } else if (visibleCards === 24) {
+    dealButton.style.display = "inline-block";
+    dealButton.style.zIndex = "100";
     dealButton.innerHTML = "Next Hole";
     dealButton.id = "next";
-    // resetButton.classList.remove("buttonInactive");
+    starterEl.style.display = "none";
+    remainingCard.style.display = "none";
+  } else if (deal) {
+    dealButton.style.display = "none";
   } else if (deal === false && hole === 0){
     dealButton.innerHTML = "Deal";
     dealButton.id = "deal";
   } else {
-    dealButton.classList.remove("buttonInactive");
-    // resetButton.classList.add("buttonInactive");
+    dealButton.style.display = "inline-block";
+    remainingCard.style.display = "none";
   }
 }
 
@@ -768,6 +716,8 @@ function getHoleCount(hole) {
 
 
 function showHide(passVis) {
+
+  remainingCard.style.display = "block";
 
   if (passVis) {
     remainingCard.innerHTML = `<div id="pass"><button id="pass">Pass</button></div>`;
@@ -803,6 +753,8 @@ function getStarter(handEl, hand) {
     })
 
     showHide(passVis);
+
+    starterEl.style.display = "block";
 
     for(key in hand){
       let suit = hand[key].suit;
@@ -994,6 +946,9 @@ function checkRoundFinish(){
     }
 
   });
+
+
+  return count;
 
 }
 

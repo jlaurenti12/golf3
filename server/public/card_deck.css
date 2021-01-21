@@ -109,16 +109,13 @@ button {
   margin-right: 35px;
 }
 
-#resetEl {
-  margin-left: 20px;
-  outline:none;
-
+#deal {
+  z-index: 100;
+  margin-right: 30%;
 }
 
-#dealEl {
-  margin-right: 20px;
-  outline:none;
-
+#deal, #next, #new {
+  margin-top: 80px;
 }
 
 .buttonInactive {
@@ -176,7 +173,7 @@ button {
   width: 200px;
   justify-content: center;
   align-items: center;
-  margin: 0px 50px;
+  margin: 48px 50px 0px 50px;
   position: relative;
 }
 
@@ -194,8 +191,8 @@ button {
 
 .instructions > span {
   display: inline-block;
-  vertical-align: middle;
   line-height: 18px;
+  padding: 10px;
 }
 
 /* =================
@@ -263,7 +260,7 @@ button {
   border: none;
   background-color: #344572;
   padding: 5px 10px;
-  height: 100px;
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
