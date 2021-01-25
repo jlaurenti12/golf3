@@ -649,9 +649,6 @@ function getFBHand(handEl, hand){
   }
 
 
-  // console.log(count);
-
-
   if (count > 5) {
       slist(handEl, hand);
   }
@@ -703,20 +700,6 @@ function slist (target, hand) {
     // (B7) ON DROP - DO SOMETHING
     i.addEventListener("drop", function (evt) {
 
-      // evt.preventDefault();
-      // if (this != current) {
-      //   let currentpos = 0, droppedpos = 0;
-      //   for (let it=0; it<items.length; it++) {
-      //     if (current == items[it]) { currentpos = it; }
-      //     if (this == items[it]) { droppedpos = it; }
-      //   }
-      //   if (currentpos < droppedpos) {
-      //     this.parentNode.insertBefore(current, this.nextSibling);
-      //   } else {
-      //     this.parentNode.insertBefore(current, this);
-      //   }
-      // }
-
       let cardA;
       let cardB;
 
@@ -729,11 +712,6 @@ function slist (target, hand) {
           console.log('matchA');
           cardA = hand[key];
           console.log(cardA);
-          // hand[key].value = current.classList[1];
-          // hand[key].suit = current.classList[0];
-          // target.innerHTML='';
-          // getFBHand(target, hand);
-          // player1HandRef.set(hand);
         }
       }
 
@@ -748,11 +726,6 @@ function slist (target, hand) {
           console.log('matchB');
           cardB = hand[key];
           console.log(cardB);
-          // hand[key].value = current.classList[1];
-          // hand[key].suit = current.classList[0];
-          // target.innerHTML='';
-          // getFBHand(target, hand);
-          // player1HandRef.set(hand);
         }
 
       }
@@ -874,7 +847,7 @@ function getInstructions(state) {
     instructions.innerHTML = `<span>Click Deal to start!</span>`;
   } else if (state === 'post-deal') {
     instructions.style.visibility = 'visible';
-    instructions.innerHTML = `<span>Everyone flip 2 cards!</span>`;
+    instructions.innerHTML = `<span>Move your cards around and then flip 2 over!</span>`;
   } else if (state === 'post-round') {
     instructions.style.visibility = 'visible';
     instructions.innerHTML = `<span>Click next hole to continue!</span>`;
@@ -1413,10 +1386,6 @@ function selectCard(suit, value, playerHand, playerScore, playerEl) {
 
          instructionRef.set('post-flip');
          
-          // instructionRef.on('value', (snap)=>{
-          //   state = snap.val();
-          //   getInstructions(state);
-          // })
         }
       
         turnRef.once('value', (snap)=> {
