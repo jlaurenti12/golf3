@@ -620,11 +620,15 @@ dealRef.on('value', (snap)=>{
 //this runs every time there is a change in a player's hand in the database
 //for each key in hand, create HTML element and append to hand element
 function getFBHand(handEl, hand){
+
+  let count = 0;
+
   for(key in hand){
+
     let suit = hand[key].suit;
     let value = hand[key].value;
     let hidden = hand[key].hidden;
-    let cardEl = document.createElement('div');
+    let cardEl = document.createElement('li');
     cardEl.classList.add(suit);
     cardEl.classList.add(value);
     cardEl.classList.add('card');
@@ -636,9 +640,147 @@ function getFBHand(handEl, hand){
       cardEl.innerHTML =
       `<span class="${value} value">${value}</span>`;
     }
+
+    if (hidden) {
+      count++
+    }
+
     handEl.appendChild(cardEl);
   }
+
+
+  // console.log(count);
+
+
+  if (count > 5) {
+      slist(handEl, hand);
+  }
+
 }
+
+
+function slist (target, hand) {
+
+
+  target.classList.add("slist");
+  var items = target.getElementsByTagName("li"), current = null;
+
+  for (let i of items) {
+    // (B1) ATTACH DRAGGABLE
+    i.draggable = true;
+    
+    // (B2) DRAG START - YELLOW HIGHLIGHT DROPZONES
+    i.addEventListener("dragstart", function (ev) {
+      current = this;
+      for (let it of items) {
+        if (it != current) { it.classList.add("hint"); }
+      }
+    });
+    
+    // (B3) DRAG ENTER - RED HIGHLIGHT DROPZONE
+    i.addEventListener("dragenter", function (ev) {
+      if (this != current) { this.classList.add("active"); }
+    });
+
+    // (B4) DRAG LEAVE - REMOVE RED HIGHLIGHT
+    i.addEventListener("dragleave", function () {
+      this.classList.remove("active");
+    });
+
+    // (B5) DRAG END - REMOVE ALL HIGHLIGHTS
+    i.addEventListener("dragend", function () {
+      for (let it of items) {
+        it.classList.remove("hint");
+        it.classList.remove("active");
+      }
+    });
+    
+    // (B6) DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
+    i.addEventListener("dragover", function (evt) {
+      evt.preventDefault();
+    });
+    
+    // (B7) ON DROP - DO SOMETHING
+    i.addEventListener("drop", function (evt) {
+
+      // evt.preventDefault();
+      // if (this != current) {
+      //   let currentpos = 0, droppedpos = 0;
+      //   for (let it=0; it<items.length; it++) {
+      //     if (current == items[it]) { currentpos = it; }
+      //     if (this == items[it]) { droppedpos = it; }
+      //   }
+      //   if (currentpos < droppedpos) {
+      //     this.parentNode.insertBefore(current, this.nextSibling);
+      //   } else {
+      //     this.parentNode.insertBefore(current, this);
+      //   }
+      // }
+
+      let cardA;
+      let cardB;
+
+      for(key in hand){
+
+        console.log(hand[key].value)
+        console.log(hand[key].suit)
+
+        if((hand[key].value == this.classList[1]) && (hand[key].suit === this.classList[0])) {
+          console.log('matchA');
+          cardA = hand[key];
+          console.log(cardA);
+          // hand[key].value = current.classList[1];
+          // hand[key].suit = current.classList[0];
+          // target.innerHTML='';
+          // getFBHand(target, hand);
+          // player1HandRef.set(hand);
+        }
+      }
+
+      for(key in hand){
+
+        console.log(hand[key].value)
+        console.log(hand[key].suit)
+
+
+
+        if((hand[key].value == current.classList[1]) && (hand[key].suit === current.classList[0])) {
+          console.log('matchB');
+          cardB = hand[key];
+          console.log(cardB);
+          // hand[key].value = current.classList[1];
+          // hand[key].suit = current.classList[0];
+          // target.innerHTML='';
+          // getFBHand(target, hand);
+          // player1HandRef.set(hand);
+        }
+
+      }
+
+      for (key in hand) {
+        if ((hand[key].value === cardA.value) && (hand[key].suit === cardA.suit)){
+          hand[key] = cardB; 
+        } else if ((hand[key].value === cardB.value) && (hand[key].suit === cardB.suit)){
+          hand[key] = cardA;
+        }
+      }
+
+      target.innerHTML='';
+      getFBHand(target, hand);
+
+      if (target.classList[0] === Player1Ref.key) {
+        player1HandRef.set(hand);
+      } else if (target.classList[0] === Player2Ref.key) {
+        player2HandRef.set(hand);
+      } else if (target.classList[0] === Player3Ref.key) {
+        player3HandRef.set(hand);
+      } else if (target.classList[0] === Player4Ref.key) {
+        player4HandRef.set(hand);
+      }
+
+    });
+  }
+};
 
 function checkTurn(player) {
   if (player === Player1Ref.key) {
@@ -1182,7 +1324,7 @@ remainingCard.addEventListener('click', (e)=>{
 player1El.addEventListener('click', (e)=>{
 
   //get nearest card element to the target
-  let card = e.target.closest('div.card');
+  let card = e.target.closest('li.card');
 
   //get the suit and card value for the card that was clicked
   let suit = card.classList[0];
@@ -1195,7 +1337,7 @@ player1El.addEventListener('click', (e)=>{
 player2El.addEventListener('click', (e)=>{
 
   //get nearest card element to the target
-  let card = e.target.closest('div.card');
+  let card = e.target.closest('li.card');
 
   //get the suit and card value for the card that was clicked
   let suit = card.classList[0];
@@ -1208,7 +1350,7 @@ player2El.addEventListener('click', (e)=>{
 player3El.addEventListener('click', (e)=>{
 
   //get nearest card element to the target
-  let card = e.target.closest('div.card');
+  let card = e.target.closest('li.card');
 
   //get the suit and card value for the card that was clicked
   let suit = card.classList[0];
@@ -1221,7 +1363,7 @@ player3El.addEventListener('click', (e)=>{
 player4El.addEventListener('click', (e)=>{
 
   //get nearest card element to the target
-  let card = e.target.closest('div.card');
+  let card = e.target.closest('li.card');
 
   //get the suit and card value for the card that was clicked
   let suit = card.classList[0];
