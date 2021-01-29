@@ -463,14 +463,14 @@ function deal(){
         }
 
           let starter = fbDeck[0];
-
-          console.log(starter);
+          // console.log(starter);
 
           starter.hidden = true;
           starterRef.push(starter);
           starterRef.once('value', function(snapshot) {
               let hand = snapshotToArray(snapshot);
-              console.log(hand);
+              // console.log(hand);
+              
               starterRef.set(hand);
           });
 
